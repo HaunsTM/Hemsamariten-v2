@@ -1,0 +1,117 @@
+When 1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=1&action=switched&actionValue=on
+When 1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=1&action=switched&actionValue=off
+When 2 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=2&action=switched&actionValue=on
+When 2 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=2&action=switched&actionValue=off
+When 3 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=3&action=switched&actionValue=on
+When 3 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=3&action=switched&actionValue=off
+When 4 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=4&action=switched&actionValue=on
+When 4 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=4&action=switched&actionValue=off
+When 5 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=5&action=switched&actionValue=on
+When 5 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=5&action=switched&actionValue=off
+When 6 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=6&action=switched&actionValue=on
+When 6 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=6&action=switched&actionValue=off
+When 7 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=7&action=switched&actionValue=on
+When 7 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=7&action=switched&actionValue=off
+When 8 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=8&action=switched&actionValue=on
+When 8 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=8&action=switched&actionValue=off
+When 9 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=9&action=switched&actionValue=on
+When 9 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=9&action=switched&actionValue=off
+When 10 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=10&action=switched&actionValue=on
+When 10 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=10&action=switched&actionValue=off
+When 11 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=11&action=switched&actionValue=on
+When 11 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=11&action=switched&actionValue=off
+When 12 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=12&action=switched&actionValue=on
+When 12 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=12&action=switched&actionValue=off
+When 13 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=13&action=switched&actionValue=on
+When 13 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=13&action=switched&actionValue=off
+When 14 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=14&action=switched&actionValue=on
+When 14 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=14&action=switched&actionValue=off
+When 15 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=15&action=switched&actionValue=on
+When 15 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=15&action=switched&actionValue=off
+When 16 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=16&action=switched&actionValue=on
+When 16 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=16&action=switched&actionValue=off
+When 17 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=17&action=switched&actionValue=on
+When 17 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=17&action=switched&actionValue=off
+When 18 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=18&action=switched&actionValue=on
+When 18 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=18&action=switched&actionValue=off
+When 19 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=19&action=switched&actionValue=on
+When 19 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=19&action=switched&actionValue=off
+When 20 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=20&action=switched&actionValue=on
+When 20 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=20&action=switched&actionValue=off
+When 21 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=21&action=switched&actionValue=on
+When 21 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=21&action=switched&actionValue=off
+When 22 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=22&action=switched&actionValue=on
+When 22 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=22&action=switched&actionValue=off
+When 23 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=23&action=switched&actionValue=on
+When 23 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=23&action=switched&actionValue=off
+When 24 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=24&action=switched&actionValue=on
+When 24 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=24&action=switched&actionValue=off
+When 25 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=25&action=switched&actionValue=on
+When 25 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=433&unit=25&action=switched&actionValue=off
+
+When A1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=A1&action=switched&actionValue=on
+When A1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=A1&action=switched&actionValue=off
+When B1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=B1&action=switched&actionValue=on
+When B1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=B1&action=switched&actionValue=off
+When C1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=C1&action=switched&actionValue=on
+When C1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=C1&action=switched&actionValue=off
+When C2 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=C2&action=switched&actionValue=on
+When C2 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=C2&action=switched&actionValue=off
+When D1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=D1&action=switched&actionValue=on
+When D1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=D1&action=switched&actionValue=off
+When F1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=F1&action=switched&actionValue=on
+When F1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=F1&action=switched&actionValue=off
+When G1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=G1&action=switched&actionValue=on
+When G1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=G1&action=switched&actionValue=off
+When H1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=H1&action=switched&actionValue=on
+When H1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=H1&action=switched&actionValue=off
+When H2 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=H2&action=switched&actionValue=on
+When H2 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=H2&action=switched&actionValue=off
+When H3 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=H3&action=switched&actionValue=on
+When H3 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=H3&action=switched&actionValue=off
+When I1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=I1&action=switched&actionValue=on
+When I1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=I1&action=switched&actionValue=off
+When I2 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=I2&action=switched&actionValue=on
+When I2 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=I2&action=switched&actionValue=off
+When J1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=J1&action=switched&actionValue=on
+When J1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=J1&action=switched&actionValue=off
+When J2 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=J2&action=switched&actionValue=on
+When J2 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=J2&action=switched&actionValue=off
+When J3 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=J3&action=switched&actionValue=on
+When J3 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=J3&action=switched&actionValue=off
+When K1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=K1&action=switched&actionValue=on
+When K1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=K1&action=switched&actionValue=off
+When L1 is switched ON send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=L1&action=switched&actionValue=on
+When L1 is switched OFF send HTTP request to http://hemsamariten.zapto.org/iot/nodered?system=zwave&unit=L1&action=switched&actionValue=off
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
