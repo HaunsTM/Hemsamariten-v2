@@ -17,7 +17,7 @@ CREATE TABLE TelldusUnitTypes (
 CREATE TABLE ZWaveGatewayTellsticZnetLiteVer2s (
 	Id			INT NOT NULL AUTO_INCREMENT,
 	
-	BaseURL		TEXT,
+	BaseURL		VARCHAR(255),
 	
 	PRIMARY KEY (Id)
 );
@@ -52,7 +52,7 @@ CREATE TABLE TelldusUnits (
 	Id							INT NOT NULL AUTO_INCREMENT,	
 	Active						BIT NOT NULL,
 	
-	Name						VARCHAR(255)  NOT NULL,
+	Name						VARCHAR(255) NOT NULL,
 	Location					VARCHAR(255),
 	LocationDesciption			VARCHAR(255),
 	
@@ -193,5 +193,6 @@ ALTER TABLE	TelldusActionValues ADD UNIQUE NoDuplicate(ActionValue, FK_TelldusAc
 ALTER TABLE	TelldusActions ADD UNIQUE NoDuplicate(CronExpression, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
 	
 ALTER TABLE	MediaSources ADD UNIQUE NoDuplicate(Url);
+ALTER TABLE	MediaOutputs ADD UNIQUE NoDuplicate(MediaWebserviceUrl);
 
 ALTER TABLE	MediaActions ADD UNIQUE NoDuplicate(CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
