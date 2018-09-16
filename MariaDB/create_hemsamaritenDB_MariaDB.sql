@@ -217,17 +217,17 @@ ALTER TABLE MediaSources ADD FOREIGN KEY (FK_MediaCountry_Id) REFERENCES MediaCo
 ALTER TABLE TelldusActionsPerformed ADD FOREIGN KEY (FK_TelldusAction_Id) REFERENCES TelldusActions(Id);
 ALTER TABLE MediaActionsPerformed ADD FOREIGN KEY (FK_MediaAction_Id) REFERENCES MediaActions(Id);
 
-ALTER TABLE	TelldusActionValues ADD UNIQUE NoDuplicate(ActionValue, FK_TelldusActionValueType_Id);
+ALTER TABLE	TelldusActionValues ADD UNIQUE (ActionValue, FK_TelldusActionValueType_Id);
 	
-ALTER TABLE	TelldusActions ADD UNIQUE NoDuplicate(FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
+ALTER TABLE	TelldusActions ADD UNIQUE (FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
 	
 	
-ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE NoDuplicate(FK_TelldusAction_Id, FK_Scheduler_Id);
-ALTER TABLE	Schedulers ADD UNIQUE NoDuplicate(LimitedCron);
-ALTER TABLE	MediaActions_Schedulers ADD UNIQUE NoDuplicate(FK_MediaAction_Id, FK_Scheduler_Id);
+ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
+ALTER TABLE	Schedulers ADD UNIQUE (LimitedCron);
+ALTER TABLE	MediaActions_Schedulers ADD UNIQUE (FK_MediaAction_Id, FK_Scheduler_Id);
 	
 ALTER TABLE	MediaSources ADD UNIQUE (Name);
 ALTER TABLE	MediaSources ADD UNIQUE (Url);
-ALTER TABLE	MediaOutputs ADD UNIQUE NoDuplicate(MediaWebserviceUrl);
+ALTER TABLE	MediaOutputs ADD UNIQUE (MediaWebserviceUrl);
 
-ALTER TABLE	MediaActions ADD UNIQUE NoDuplicate(CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
+ALTER TABLE	MediaActions ADD UNIQUE (CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);

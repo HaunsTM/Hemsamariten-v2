@@ -37,7 +37,6 @@ DROP procedure IF EXISTS GetInsertedMediaAction;
 DELIMITER $$
 CREATE PROCEDURE GetInsertedTelldusAction ( 
 	IN p_Active BIT,
-	IN p_CronExpression VARCHAR(30),
 	IN p_ZWaveGatewayTellsticZnetLiteVer2Id INT,
 	IN p_TelldusActionTypeOption VARCHAR(255),
 	IN p_TelldusActionValueTypeName VARCHAR(20),
@@ -62,7 +61,7 @@ BEGIN
 	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name = p_TelldusUnitName);
 	
 	/* get TelldusAction_Id */
-	INSERT INTO TelldusActions ( Active, CronExpression, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, IFNULL(p_CronExpression,''),'1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+	INSERT INTO TelldusActions ( Active, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, '1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$

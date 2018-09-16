@@ -137,7 +137,7 @@ CREATE TABLE MediaActionsPerformed (
 CREATE TABLE MediaSources (
 	Id						INT NOT NULL AUTO_INCREMENT,
 	
-	Name					VARCHAR(255) NOT NULL,
+	Name					VARCHAR(100),
 	Url						VARCHAR(100),
 	
 	FK_MediaCategoryType_Id	INT NOT NULL,
@@ -217,21 +217,20 @@ ALTER TABLE MediaSources ADD FOREIGN KEY (FK_MediaCountry_Id) REFERENCES MediaCo
 ALTER TABLE TelldusActionsPerformed ADD FOREIGN KEY (FK_TelldusAction_Id) REFERENCES TelldusActions(Id);
 ALTER TABLE MediaActionsPerformed ADD FOREIGN KEY (FK_MediaAction_Id) REFERENCES MediaActions(Id);
 
-ALTER TABLE	TelldusActionValues ADD UNIQUE NoDuplicate(ActionValue, FK_TelldusActionValueType_Id);
+ALTER TABLE	TelldusActionValues ADD UNIQUE (ActionValue, FK_TelldusActionValueType_Id);
 	
-ALTER TABLE	TelldusActions ADD UNIQUE NoDuplicate(FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
+ALTER TABLE	TelldusActions ADD UNIQUE (FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
 	
 	
-ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE NoDuplicate(FK_TelldusAction_Id, FK_Scheduler_Id);
-ALTER TABLE	Schedulers ADD UNIQUE NoDuplicate(LimitedCron);
-ALTER TABLE	MediaActions_Schedulers ADD UNIQUE NoDuplicate(FK_MediaAction_Id, FK_Scheduler_Id);
+ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
+ALTER TABLE	Schedulers ADD UNIQUE (LimitedCron);
+ALTER TABLE	MediaActions_Schedulers ADD UNIQUE (FK_MediaAction_Id, FK_Scheduler_Id);
 	
-ALTER TABLE	MediaSources ADD UNIQUE NoDuplicate(Name);
-ALTER TABLE	MediaSources ADD UNIQUE NoDuplicate(Url);
-ALTER TABLE	MediaOutputs ADD UNIQUE NoDuplicate(MediaWebserviceUrl);
+ALTER TABLE	MediaSources ADD UNIQUE (Name);
+ALTER TABLE	MediaSources ADD UNIQUE (Url);
+ALTER TABLE	MediaOutputs ADD UNIQUE (MediaWebserviceUrl);
 
-ALTER TABLE	MediaActions ADD UNIQUE NoDuplicate(CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
-
+ALTER TABLE	MediaActions ADD UNIQUE (CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
 
 INSERT INTO TelldusUnitLocations (Name) VALUES ('*Ingen särskild plats*');
 INSERT INTO TelldusUnitLocations (Name) VALUES ('Garage');
@@ -608,15 +607,14 @@ INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Pause');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Resume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('SetVolume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Stop');
-
 DROP procedure IF EXISTS RegisterPerformedTelldusAction;
 DROP procedure IF EXISTS GetInsertedTelldusAction;
 DROP procedure IF EXISTS RegisterPerformedMediaAction;
 DROP procedure IF EXISTS GetInsertedMediaAction;
+
 DELIMITER $$
 CREATE PROCEDURE GetInsertedTelldusAction ( 
 	IN p_Active BIT,
-	IN p_CronExpression VARCHAR(30),
 	IN p_ZWaveGatewayTellsticZnetLiteVer2Id INT,
 	IN p_TelldusActionTypeOption VARCHAR(255),
 	IN p_TelldusActionValueTypeName VARCHAR(20),
@@ -641,7 +639,7 @@ BEGIN
 	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name = p_TelldusUnitName);
 	
 	/* get TelldusAction_Id */
-	INSERT INTO TelldusActions ( Active, CronExpression, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, IFNULL(p_CronExpression,''),'1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+	INSERT INTO TelldusActions ( Active, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, '1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
@@ -674,7 +672,7 @@ CREATE PROCEDURE GetInsertedMediaAction (
 	IN p_MediaSourceName VARCHAR(255),
 	IN p_MediaOutputVolumeValue TINYINT,
 	IN p_MediaOutputWebserviceUrl VARCHAR(100),
-	IN p_MediaActionTypeOption VARCHAR(255)
+	IN p_MediaActionTypeOption VARCHAR(255),
 	OUT idOut INT)
 BEGIN
 	/* Inserts an Action and returns Id for the inserted row. If an identical Action already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
@@ -704,7 +702,7 @@ CREATE PROCEDURE RegisterPerformedMediaAction (
 	IN p_MediaSourceName VARCHAR(255),
 	IN p_MediaOutputVolumeValue TINYINT,
 	IN p_MediaOutputWebserviceUrl VARCHAR(100),
-	IN p_MediaActionTypeOption VARCHAR(255)
+	IN p_MediaActionTypeOption VARCHAR(255),
 	OUT idOut INT)
 BEGIN
 	CALL GetInsertedMediaAction('1', p_MediaSourceName, p_MediaOutputVolumeValue, p_MediaOutputWebserviceUrl, p_MediaActionTypeOption, @InsertedMediaAction_Id);
@@ -716,4 +714,3 @@ BEGIN
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
 DELIMITER ;
-
