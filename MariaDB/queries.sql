@@ -78,7 +78,7 @@ CREATE PROCEDURE RegisterPerformedTelldusAction (
 	IN p_TelldusUnitName VARCHAR(255),
 	OUT idOut INT)
 BEGIN
-	CALL GetInsertedTelldusAction('1','',p_ZWaveGatewayTellsticZnetLiteVer2Id,p_TelldusActionTypeOption,p_TelldusActionValueTypeName,p_TelldusActionValue,p_TelldusUnitName,@InsertedTelldusAction_Id);
+	CALL GetInsertedTelldusAction('1', p_ZWaveGatewayTellsticZnetLiteVer2Id,p_TelldusActionTypeOption,p_TelldusActionValueTypeName,p_TelldusActionValue,p_TelldusUnitName,@InsertedTelldusAction_Id);
 	
 	/* register performed TelldusAction */
 	INSERT INTO TelldusActionsPerformed(PerformedTime, FK_TelldusAction_Id) VALUES (IFNULL(p_PerformedTelldusActionUnixTime, UNIX_TIMESTAMP()), @InsertedTelldusAction_Id);
