@@ -40,6 +40,7 @@ INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetLightLumen');
 
 INSERT INTO ZWaveGatewayTellsticZnetLiteVer2s (BaseURL) VALUES ('http://10.0.0.100');
 
+INSERT INTO TelldusActionValueTypes (Name) VALUES ('');
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('OnLevelValue');
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('Effect_W');
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('Temperature_C');

@@ -64,9 +64,7 @@ CREATE TABLE TelldusUnits (
  
 CREATE TABLE TelldusActions (
 	Id										INT NOT NULL AUTO_INCREMENT,
-	Active									BIT NOT NULL,
-	
-	CronExpression							VARCHAR(30) NOT NULL,
+	Active									BIT NOT NULL,	
 	
 	FK_ZWaveGatewayTellsticZnetLiteVer2_Id	INT NOT NULL,
 	FK_TelldusActionType_Id					INT NOT NULL,
@@ -82,6 +80,32 @@ CREATE TABLE TelldusActionsPerformed (
 	PerformedTime		INT NOT NULL,
 	
 	FK_TelldusAction_Id	INT NOT NULL,
+	
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE TelldusActions_Schedulers (
+	Id					INT NOT NULL AUTO_INCREMENT,
+	
+	FK_TelldusAction_Id	INT NOT NULL,
+	FK_Scheduler_Id		INT NOT NULL,
+	
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE Schedulers (
+	Id			INT NOT NULL AUTO_INCREMENT,
+	
+	LimitedCron	VARCHAR(30) NOT NULL,
+		
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE MediaActions_Schedulers (
+	Id					INT NOT NULL AUTO_INCREMENT,
+	
+	FK_MediaAction_Id	INT NOT NULL,
+	FK_Scheduler_Id		INT NOT NULL,
 	
 	PRIMARY KEY (Id)
 );
@@ -113,7 +137,7 @@ CREATE TABLE MediaActionsPerformed (
 CREATE TABLE MediaSources (
 	Id						INT NOT NULL AUTO_INCREMENT,
 	
-	Name					VARCHAR(255) NOT NULL,
+	Name					VARCHAR(100),
 	Url						VARCHAR(100),
 	
 	FK_MediaCategoryType_Id	INT NOT NULL,
@@ -175,12 +199,17 @@ ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_ZWaveGatewayTellsticZnetLiteVer2_
 ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_TelldusActionType_Id) REFERENCES TelldusActionTypes(Id);
 ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_TelldusActionValue_Id) REFERENCES TelldusActionValues(Id);
 ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_TelldusUnit_Id) REFERENCES TelldusUnits(Id);
+
+ALTER TABLE TelldusActions_Schedulers ADD FOREIGN KEY (FK_TelldusAction_Id) REFERENCES TelldusActions(Id);
+ALTER TABLE TelldusActions_Schedulers  ADD FOREIGN KEY (FK_Scheduler_Id) REFERENCES Schedulers(Id);
+
+ALTER TABLE MediaActions_Schedulers ADD FOREIGN KEY (FK_MediaAction_Id) REFERENCES MediaActions(Id);
+ALTER TABLE MediaActions_Schedulers ADD FOREIGN KEY (FK_Scheduler_Id) REFERENCES Schedulers(Id);
 		
 ALTER TABLE MediaActions ADD FOREIGN KEY (FK_MediaSource_Id) REFERENCES MediaSources(Id);
 ALTER TABLE MediaActions ADD FOREIGN KEY (FK_MediaOutputVolume_Id) REFERENCES MediaOutputVolumes(Id);	
 ALTER TABLE MediaActions ADD FOREIGN KEY (FK_MediaOutput_Id) REFERENCES MediaOutputs(Id);
 ALTER TABLE MediaActions ADD FOREIGN KEY (FK_MediaActionType_Id) REFERENCES MediaActionTypes(Id);
-
 
 ALTER TABLE MediaSources ADD FOREIGN KEY (FK_MediaCategoryType_Id) REFERENCES MediaCategoryTypes(Id);
 ALTER TABLE MediaSources ADD FOREIGN KEY (FK_MediaCountry_Id) REFERENCES MediaCountries(Id);
@@ -190,9 +219,15 @@ ALTER TABLE MediaActionsPerformed ADD FOREIGN KEY (FK_MediaAction_Id) REFERENCES
 
 ALTER TABLE	TelldusActionValues ADD UNIQUE NoDuplicate(ActionValue, FK_TelldusActionValueType_Id);
 	
-ALTER TABLE	TelldusActions ADD UNIQUE NoDuplicate(CronExpression, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
+ALTER TABLE	TelldusActions ADD UNIQUE NoDuplicate(FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
 	
-ALTER TABLE	MediaSources ADD UNIQUE NoDuplicate(Url);
+	
+ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE NoDuplicate(FK_TelldusAction_Id, FK_Scheduler_Id);
+ALTER TABLE	Schedulers ADD UNIQUE NoDuplicate(LimitedCron);
+ALTER TABLE	MediaActions_Schedulers ADD UNIQUE NoDuplicate(FK_MediaAction_Id, FK_Scheduler_Id);
+	
+ALTER TABLE	MediaSources ADD UNIQUE (Name);
+ALTER TABLE	MediaSources ADD UNIQUE (Url);
 ALTER TABLE	MediaOutputs ADD UNIQUE NoDuplicate(MediaWebserviceUrl);
 
 ALTER TABLE	MediaActions ADD UNIQUE NoDuplicate(CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
