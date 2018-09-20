@@ -1,4 +1,15 @@
 ------------------------------------------------------------------
+--get Actions to be performed by LimitedCron
+SELECT Schedulers.LimitedCron, TelldusActionTypes.ActionTypeOption, TelldusUnits.Name, TelldusActionValues.ActionValue, TelldusActionValueTypes.Name
+FROM Schedulers
+	INNER JOIN TelldusActions_Schedulers ON Schedulers.Id = TelldusActions_Schedulers.FK_Scheduler_Id
+	INNER JOIN TelldusActions ON TelldusActions_Schedulers.FK_TelldusAction_Id = TelldusActions.Id
+	INNER JOIN TelldusActionTypes ON TelldusActions.FK_TelldusActionType_Id	= TelldusActionTypes.Id
+	INNER JOIN TelldusUnits ON TelldusActions.FK_TelldusUnit_Id = TelldusUnits.Id
+	INNER JOIN TelldusActionValues ON TelldusActions.FK_TelldusActionValue_Id = TelldusActionValues.Id
+	INNER JOIN TelldusActionValueTypes ON TelldusActionValues.FK_TelldusActionValueType_Id = TelldusActionValueTypes.Id
+WHERE Schedulers.LimitedCron = '* 45 20 * * TUE'
+AND TelldusActions.Active = 1
 
 
 /* get TelldusActionType_Id */
@@ -16,7 +27,7 @@ SET @TelldusActionValue_Id = LAST_INSERT_ID();
 
 
 /* get TelldusUnit_Id */
-SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name='A1');
+SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE TelldusLiveNativeName='A1');
 
 
 /* get TelldusAction_Id */
@@ -58,7 +69,7 @@ BEGIN
 	SET @TelldusActionValue_Id = LAST_INSERT_ID();
 	
 	/* get TelldusUnit_Id */
-	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name = p_TelldusUnitName);
+	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE TelldusLiveNativeName = p_TelldusUnitName);
 	
 	/* get TelldusAction_Id */
 	INSERT INTO TelldusActions ( Active, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, '1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);

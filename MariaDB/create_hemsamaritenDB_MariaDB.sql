@@ -52,7 +52,8 @@ CREATE TABLE TelldusUnits (
 	Id							INT NOT NULL AUTO_INCREMENT,	
 	Active						BIT NOT NULL,
 	
-	Name						VARCHAR(255) NOT NULL,
+	TelldusLiveNativeName		VARCHAR(255) NOT NULL,
+	TelldusLiveNativeId			INT NOT NULL,
 	Location					VARCHAR(255),
 	LocationDesciption			VARCHAR(255),
 	
