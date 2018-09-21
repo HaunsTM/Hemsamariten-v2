@@ -52,7 +52,7 @@ CREATE PROCEDURE GetInsertedTelldusAction (
 	IN p_TelldusActionTypeOption VARCHAR(255),
 	IN p_TelldusActionValueTypeName VARCHAR(20),
 	IN p_TelldusActionValue VARCHAR(255),
-	IN p_TelldusUnitName VARCHAR(255),
+	IN p_TelldusUnitTelldusLiveNativeName VARCHAR(255),
 	OUT idOut INT)
 BEGIN
 	/* Inserts an Action and returns Id for the inserted row. If an identical Action already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
@@ -69,7 +69,7 @@ BEGIN
 	SET @TelldusActionValue_Id = LAST_INSERT_ID();
 	
 	/* get TelldusUnit_Id */
-	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE TelldusLiveNativeName = p_TelldusUnitName);
+	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE TelldusLiveNativeName = p_TelldusUnitTelldusLiveNativeName);
 	
 	/* get TelldusAction_Id */
 	INSERT INTO TelldusActions ( Active, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, '1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
@@ -86,10 +86,10 @@ CREATE PROCEDURE RegisterPerformedTelldusAction (
 	IN p_TelldusActionTypeOption VARCHAR(255),
 	IN p_TelldusActionValueTypeName VARCHAR(20),
 	IN p_TelldusActionValue VARCHAR(255),
-	IN p_TelldusUnitName VARCHAR(255),
+	IN p_TelldusUnitTelldusLiveNativeName VARCHAR(255),
 	OUT idOut INT)
 BEGIN
-	CALL GetInsertedTelldusAction('1', p_ZWaveGatewayTellsticZnetLiteVer2Id,p_TelldusActionTypeOption,p_TelldusActionValueTypeName,p_TelldusActionValue,p_TelldusUnitName,@InsertedTelldusAction_Id);
+	CALL GetInsertedTelldusAction('1', p_ZWaveGatewayTellsticZnetLiteVer2Id,p_TelldusActionTypeOption,p_TelldusActionValueTypeName,p_TelldusActionValue,p_TelldusUnitTelldusLiveNativeName,@InsertedTelldusAction_Id);
 	
 	/* register performed TelldusAction */
 	INSERT INTO TelldusActionsPerformed(PerformedTime, FK_TelldusAction_Id) VALUES (IFNULL(p_PerformedTelldusActionUnixTime, UNIX_TIMESTAMP()), @InsertedTelldusAction_Id);

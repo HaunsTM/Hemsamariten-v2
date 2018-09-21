@@ -36,7 +36,6 @@ INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('OnLevel');
 INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetEffect');
 INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetTemperature');
 INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('SetTemperature');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('RefreshBearerToken');
 INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetSunriseTime');
 INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetSunsetTime');
 INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetLightLumen');
@@ -387,3 +386,4 @@ INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Pause');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Resume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('SetVolume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Stop');
+

@@ -54,7 +54,6 @@ CREATE TABLE TelldusUnits (
 	
 	TelldusLiveNativeName		VARCHAR(255) NOT NULL,
 	TelldusLiveNativeId			INT NOT NULL,
-	Location					VARCHAR(255),
 	LocationDesciption			VARCHAR(255),
 	
 	FK_TelldusUnitLocation_Id	INT,
