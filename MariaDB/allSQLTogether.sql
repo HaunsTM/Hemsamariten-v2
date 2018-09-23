@@ -14,14 +14,6 @@ CREATE TABLE TelldusUnitTypes (
 	PRIMARY KEY (Id)
 );
 
-CREATE TABLE ZWaveGatewayTellsticZnetLiteVer2s (
-	Id			INT NOT NULL AUTO_INCREMENT,
-	
-	BaseURL		VARCHAR(255),
-	
-	PRIMARY KEY (Id)
-);
-
 CREATE TABLE TelldusActionTypes (
 	Id					INT NOT NULL AUTO_INCREMENT,
 	
@@ -52,8 +44,7 @@ CREATE TABLE TelldusUnits (
 	Id							INT NOT NULL AUTO_INCREMENT,	
 	Active						BIT NOT NULL,
 	
-	TelldusLiveNativeName		VARCHAR(255) NOT NULL,
-	TelldusLiveNativeId			INT NOT NULL,
+	Name						VARCHAR(255) NOT NULL,
 	LocationDesciption			VARCHAR(255),
 	
 	FK_TelldusUnitLocation_Id	INT,
@@ -66,7 +57,6 @@ CREATE TABLE TelldusActions (
 	Id										INT NOT NULL AUTO_INCREMENT,
 	Active									BIT NOT NULL,	
 	
-	FK_ZWaveGatewayTellsticZnetLiteVer2_Id	INT NOT NULL,
 	FK_TelldusActionType_Id					INT NOT NULL,
 	FK_TelldusActionValue_Id				INT NOT NULL,
 	FK_TelldusUnit_Id						INT NOT NULL,
@@ -195,7 +185,6 @@ ALTER TABLE TelldusActionValues ADD FOREIGN KEY (FK_TelldusActionValueType_Id) R
 ALTER TABLE TelldusUnits ADD FOREIGN KEY (FK_TelldusUnitLocation_Id) REFERENCES TelldusUnitLocations(Id);
 ALTER TABLE TelldusUnits ADD FOREIGN KEY (FK_TelldusUnitType_Id) REFERENCES TelldusUnitTypes(Id);
 
-ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_ZWaveGatewayTellsticZnetLiteVer2_Id) REFERENCES ZWaveGatewayTellsticZnetLiteVer2s(Id);
 ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_TelldusActionType_Id) REFERENCES TelldusActionTypes(Id);
 ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_TelldusActionValue_Id) REFERENCES TelldusActionValues(Id);
 ALTER TABLE TelldusActions ADD FOREIGN KEY (FK_TelldusUnit_Id) REFERENCES TelldusUnits(Id);
@@ -219,7 +208,7 @@ ALTER TABLE MediaActionsPerformed ADD FOREIGN KEY (FK_MediaAction_Id) REFERENCES
 
 ALTER TABLE	TelldusActionValues ADD UNIQUE (ActionValue, FK_TelldusActionValueType_Id);
 	
-ALTER TABLE	TelldusActions ADD UNIQUE (FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
+ALTER TABLE	TelldusActions ADD UNIQUE (FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id);
 	
 	
 ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
@@ -264,82 +253,189 @@ INSERT INTO TelldusUnitTypes (Name) VALUES ('433 MHz - LightSensor');
 INSERT INTO TelldusUnitTypes (Name) VALUES ('Z-Wave - OnOffDim');
 INSERT INTO TelldusUnitTypes (Name) VALUES ('Z-Wave - HeatItZWaveThermostat');
 
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('TurnOn');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('TurnOff');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('OnLevel');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetEffect');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetTemperature');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('SetTemperature');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('RefreshBearerToken');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetSunriseTime');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetSunsetTime');
-INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('GetLightLumen');
-
-INSERT INTO ZWaveGatewayTellsticZnetLiteVer2s (BaseURL) VALUES ('http://10.0.0.100');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('getProfile');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('listSensors');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('setSensorName');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('setSensorIgnore');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('listClients');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('listDevices');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('getDeviceInfo');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('addDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('deviceLearn');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('setDeviceModel');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('setDeviceName');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('setDeviceParameter');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('setDeviceProtocol');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('removeDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('bellDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('dimDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('onOffDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('stopDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('upDownDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('commandDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('commandDevice');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('listEvents');
+INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('deviceHistory');
 
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('');
-INSERT INTO TelldusActionValueTypes (Name) VALUES ('OnLevelValue');
-INSERT INTO TelldusActionValueTypes (Name) VALUES ('Effect_W');
-INSERT INTO TelldusActionValueTypes (Name) VALUES ('Temperature_C');
-INSERT INTO TelldusActionValueTypes (Name) VALUES ('BearerToken');
+INSERT INTO TelldusActionValueTypes (Name) VALUES ('levelValue');
+INSERT INTO TelldusActionValueTypes (Name) VALUES ('effect_W');
+INSERT INTO TelldusActionValueTypes (Name) VALUES ('temperature_C');
 
-INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImF1ZCI6IkhlbXNhbWFyaXRlbkFwcCIsImV4cCI6MTU2NzcxMjk0Mn0.eyJyZW5ldyI6dHJ1ZSwidHRsIjozMTUzNjAwMH0.qrmgoU0XzFYqHFItdXRKJ5MxSliCL7HPkO11AdcQMAQ',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'BearerToken'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('on',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('off',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('0',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('1',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('2',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('3',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('4',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('5',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('6',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('7',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('8',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('9',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('10',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('11',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('12',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('13',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('14',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('15',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('16',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('17',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('18',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('19',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('20',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('21',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('22',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('23',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('24',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('25',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('26',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('27',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('28',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('29',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('30',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('31',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('32',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('33',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('34',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('35',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('36',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('37',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('38',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('39',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('40',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('41',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('42',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('43',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('44',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('45',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('46',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('47',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('48',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('49',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('50',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('51',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('52',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('53',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('54',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('55',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('56',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('57',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('58',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('59',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('60',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('61',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('62',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('63',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('64',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('65',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('66',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('67',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('68',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('69',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('70',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('71',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('72',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('73',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('74',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('75',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('76',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('77',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('78',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('79',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('80',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('81',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('82',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('83',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('84',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('85',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('86',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('87',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('88',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('89',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('90',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('91',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('92',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('93',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('94',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('95',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('96',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('97',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('98',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('99',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('100',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
 
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'1','1908030',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'fönsterlampa');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'2','1908032',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'pianobelysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'3','1908047',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'golvlampa');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'4','1908061',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'kulört dekorationsbelysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'5','1908062',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'fönsterlampor');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'6','1908063',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'belysning vid fågelmataren');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'7','1908064',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'golvlampa');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'8','1908068',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'subwoofer');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'9','1908096',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'liten lampa på byrå');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'10','1908099',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'ljusglober utanför toalett');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'11','1908123',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'spegelbordet utanför den lilla toaletten');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'12','1908125',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'(ljusglober)');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'13','1908127',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'fönsterkarm');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'14','1908133',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'grön lampa');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'15','1908135',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'liten bokhylla närmast fönstret');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'16','1908137',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'vinkelbokhylla i hörnet');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'17','1908142',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'liten bordslampa');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'18','1908141',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'bokhyllebelysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'19','1908143',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'ljusorgel');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'20','1908145',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Sovrum'),'fönsterkarmbelysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'21','1908147',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'lampa i fönsterkarm');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'22','1908150',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'23','1908154',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'jordglob');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'24','1908159',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'25','1907857',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'1',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'fönsterlampa');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'2',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'pianobelysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'3',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'golvlampa');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'4',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'kulört dekorationsbelysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'5',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'fönsterlampor');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'6',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'belysning vid fågelmataren');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'7',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'golvlampa');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'8',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'subwoofer');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'9',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'liten lampa på byrå');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'10',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'ljusglober utanför toalett');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'11',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'spegelbordet utanför den lilla toaletten');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'12',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'(ljusglober)');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'13',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'fönsterkarm');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'14',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'grön lampa');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'15',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'liten bokhylla närmast fönstret');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'16',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'vinkelbokhylla i hörnet');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'17',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'liten bordslampa');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'18',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'bokhyllebelysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'19',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'ljusorgel');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'20',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Sovrum'),'fönsterkarmbelysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'21',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'lampa i fönsterkarm');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'22',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'23',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'jordglob');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'24',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'25',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - OnOff'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
    
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'A1','2325119',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'B1','2325509',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Sovrum'),'');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'C1','',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'mitt i rummet');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'C2','2327774',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'vid sovrumsväggen');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'D1','2325529',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'taket');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'E1','2327824',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'vid badrum');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'F1','2327839',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'entrebelysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'G1','2327809',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'vid gästtoalett');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'H1','2328060',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'sydligaste taklampssektionen');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'H2','2328055',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'mellersta taklampssektionen');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'H3','2328040',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'nordligaste taklampssektionen');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'I1','2333257',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'yttre belysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'I2','2328105',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'inre belysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'J1','2327854',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'matbordsbelysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'J2','2327992',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'vask');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'J3','2327892',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'yttre skåpbelysning');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'K1','2328012',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'L1','2328025',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'ingång (entrebelysning)');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'A1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hans rum'),'');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'B1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Sovrum'),'');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'C1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'mitt i rummet');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'C2',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'TV-rum'),'vid sovrumsväggen');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'D1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Atikas rum'),'taket');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'E1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'vid badrum');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'F1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'entrebelysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'G1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Korridor'),'vid gästtoalett');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'H1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'sydligaste taklampssektionen');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'H2',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'mellersta taklampssektionen');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'H3',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Vardagsrum'),'nordligaste taklampssektionen');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'I1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'yttre belysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'I2',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'inre belysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'J1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'matbordsbelysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'J2',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'vask');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'J3',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Kök'),'yttre skåpbelysning');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'K1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'L1',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - OnOffDim'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'ingång (entrebelysning)');
 
-
-
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Grovkök golvtermostat','2330530',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'under elcentralen till vänster');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Huvudtermostat','2382204',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'under elcentralen till vänster');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Uterum termostat','2314959',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'under elcentralen till vänster');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Ringklocka Alarm','1991565',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - Bell'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hus - fasad'),'grovköksingång från parkeringen');
-INSERT INTO TelldusUnits (Active,TelldusLiveNativeName,TelldusLiveNativeId,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Skymning','2046410',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - LightSensor'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
-
-
-
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Grovkök golvtermostat',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'under elcentralen till vänster');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Huvudtermostat',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'under elcentralen till vänster');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Uterum termostat',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'under elcentralen till vänster');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Ringklocka Alarm',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - Bell'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hus - fasad'),'grovköksingång från parkeringen');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Skymning',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - LightSensor'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
 
 INSERT INTO MediaCountries (Name,Code,ISOAlpha2,ISOAlpha3) VALUES ('Algeriet', '213', 'DZ', 'DZA');
 INSERT INTO MediaCountries (Name,Code,ISOAlpha2,ISOAlpha3) VALUES ('Danmark', '45', 'DK', 'DNK');
@@ -621,3 +717,110 @@ INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Pause');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Resume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('SetVolume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Stop');
+
+DROP procedure IF EXISTS RegisterPerformedTelldusAction;
+DROP procedure IF EXISTS GetInsertedTelldusAction;
+DROP procedure IF EXISTS RegisterPerformedMediaAction;
+DROP procedure IF EXISTS GetInsertedMediaAction;
+
+DELIMITER $$
+CREATE PROCEDURE GetInsertedTelldusAction ( 
+	IN p_Active BIT,
+	IN p_TelldusUnit_Name VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
+	IN p_TelldusActionValueType_Name VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue VARCHAR(255),
+	OUT idOut INT)
+BEGIN
+	/* Inserts an Action and returns Id for the inserted row. If an identical Action already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
+	
+	/* get TelldusUnit_Id */
+	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name = p_TelldusUnit_Name);
+
+	/* get TelldusActionType_Id */
+	SET @TelldusActionType_Id = (SELECT Id FROM TelldusActionTypes WHERE ActionTypeOption = p_TelldusActionType_ActionTypeOption);
+	
+	/* get TelldusActionValueType_Id */
+	SET @TelldusActionValueType_Id = (SELECT Id FROM TelldusActionValueTypes WHERE Name = p_TelldusActionValueType_Name);
+	
+	/* get TelldusActionValue_Id */
+	INSERT INTO TelldusActionValues(ActionValue, FK_TelldusActionValueType_Id) VALUES (p_TelldusActionValue_ActionValue, @TelldusActionValueType_Id) 
+		ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+	SET @TelldusActionValue_Id = LAST_INSERT_ID();
+	
+	
+	/* get TelldusAction_Id */
+	INSERT INTO TelldusActions ( Active, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE RegisterPerformedTelldusAction (
+	IN p_PerformedTelldusActionUnixTime INT,
+	IN p_TelldusUnit_Name VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
+	IN p_TelldusActionValueType_Name VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue VARCHAR(255),
+	OUT idOut INT)
+BEGIN
+	CALL GetInsertedTelldusAction('1', p_TelldusUnit_Name,p_TelldusActionType_ActionTypeOption,p_TelldusActionValueType_Name,p_TelldusActionValue_ActionValue,@InsertedTelldusAction_Id);
+	
+	/* register performed TelldusAction */
+	INSERT INTO TelldusActionsPerformed(PerformedTime, FK_TelldusAction_Id) VALUES (IFNULL(p_PerformedTelldusActionUnixTime, UNIX_TIMESTAMP()), @InsertedTelldusAction_Id);
+	SET @LastTelldusActionPerformed_Id = LAST_INSERT_ID();
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE GetInsertedMediaAction ( 
+	IN p_Active BIT,
+	IN p_MediaSourceName VARCHAR(255),
+	IN p_MediaOutputVolumeValue TINYINT,
+	IN p_MediaOutputWebserviceUrl VARCHAR(100),
+	IN p_MediaActionTypeOption VARCHAR(255),
+	OUT idOut INT)
+BEGIN
+	/* Inserts an Action and returns Id for the inserted row. If an identical Action already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
+	
+	/* get MediaSource_Id */
+	SET @MediaSource_Id = (SELECT Id FROM MediaSources WHERE Name = p_MediaSourceName);
+	
+	/* get MediaOutputVolume_Id */
+	SET @MediaOutputVolume_Id = (SELECT Id FROM MediaOutputVolumes WHERE VolumeValue = p_MediaOutputVolumeValue);
+	
+	/* get MediaOutput_Id */
+	SET @MediaOutput_Id = (SELECT Id FROM MediaOutputs WHERE MediaWebserviceUrl = p_MediaOutputWebserviceUrl);
+	
+	/* get MediaActionType_Id */
+	SET @MediaActionType_Id = (SELECT Id FROM MediaActionTypes WHERE ActionTypeOption = p_MediaActionTypeOption);
+	
+	/* get MediaAction_Id */
+	INSERT INTO MediaActions ( Active, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id) VALUES (p_Active, @MediaSource_Id, @MediaOutputVolume_Id, @MediaOutput_Id, @MediaActionType_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE RegisterPerformedMediaAction (
+	IN p_PerformedMediaActionUnixTime INT,
+	IN p_MediaSourceName VARCHAR(255),
+	IN p_MediaOutputVolumeValue TINYINT,
+	IN p_MediaOutputWebserviceUrl VARCHAR(100),
+	IN p_MediaActionTypeOption VARCHAR(255),
+	OUT idOut INT)
+BEGIN
+	CALL GetInsertedMediaAction('1', p_MediaSourceName, p_MediaOutputVolumeValue, p_MediaOutputWebserviceUrl, p_MediaActionTypeOption, @InsertedMediaAction_Id);
+	
+	/* register performed MediaAction */
+	INSERT INTO MediaActionsPerformed(PerformedTime, FK_MediaAction_Id) VALUES (IFNULL(p_PerformedMediaActionUnixTime, UNIX_TIMESTAMP()), @InsertedMediaAction_Id);
+	SET @LastMediaActionPerformed_Id = LAST_INSERT_ID();
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;

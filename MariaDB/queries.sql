@@ -27,11 +27,11 @@ SET @TelldusActionValue_Id = LAST_INSERT_ID();
 
 
 /* get TelldusUnit_Id */
-SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE TelldusLiveNativeName='A1');
+SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name='A1');
 
 
 /* get TelldusAction_Id */
-INSERT INTO TelldusActions ( Active, CronExpression, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES ('1', IFNULL('EXEMPEL PÅ CRON',''),'1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+INSERT INTO TelldusActions ( Active, CronExpression, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES ('1', IFNULL('EXEMPEL PÅ CRON',''), @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 SET @TelldusAction_Id = LAST_INSERT_ID();
 
 
@@ -48,31 +48,31 @@ DROP procedure IF EXISTS GetInsertedMediaAction;
 DELIMITER $$
 CREATE PROCEDURE GetInsertedTelldusAction ( 
 	IN p_Active BIT,
-	IN p_ZWaveGatewayTellsticZnetLiteVer2Id INT,
-	IN p_TelldusActionTypeOption VARCHAR(255),
-	IN p_TelldusActionValueTypeName VARCHAR(20),
-	IN p_TelldusActionValue VARCHAR(255),
-	IN p_TelldusUnitTelldusLiveNativeName VARCHAR(255),
+	IN p_TelldusUnit_Name VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
+	IN p_TelldusActionValueType_Name VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue VARCHAR(255),
 	OUT idOut INT)
 BEGIN
 	/* Inserts an Action and returns Id for the inserted row. If an identical Action already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
 	
+	/* get TelldusUnit_Id */
+	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name = p_TelldusUnit_Name);
+
 	/* get TelldusActionType_Id */
-	SET @TelldusActionType_Id = (SELECT Id FROM TelldusActionTypes WHERE ActionTypeOption = p_TelldusActionTypeOption);
+	SET @TelldusActionType_Id = (SELECT Id FROM TelldusActionTypes WHERE ActionTypeOption = p_TelldusActionType_ActionTypeOption);
 	
 	/* get TelldusActionValueType_Id */
-	SET @TelldusActionValueType_Id = (SELECT Id FROM TelldusActionValueTypes WHERE Name = p_TelldusActionValueTypeName);
+	SET @TelldusActionValueType_Id = (SELECT Id FROM TelldusActionValueTypes WHERE Name = p_TelldusActionValueType_Name);
 	
 	/* get TelldusActionValue_Id */
-	INSERT INTO TelldusActionValues(ActionValue, FK_TelldusActionValueType_Id) VALUES (p_TelldusActionValue, @TelldusActionValueType_Id) 
+	INSERT INTO TelldusActionValues(ActionValue, FK_TelldusActionValueType_Id) VALUES (p_TelldusActionValue_ActionValue, @TelldusActionValueType_Id) 
 		ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 	SET @TelldusActionValue_Id = LAST_INSERT_ID();
 	
-	/* get TelldusUnit_Id */
-	SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE TelldusLiveNativeName = p_TelldusUnitTelldusLiveNativeName);
 	
 	/* get TelldusAction_Id */
-	INSERT INTO TelldusActions ( Active, FK_ZWaveGatewayTellsticZnetLiteVer2_Id, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, '1', @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+	INSERT INTO TelldusActions ( Active, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
@@ -82,14 +82,13 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE RegisterPerformedTelldusAction (
 	IN p_PerformedTelldusActionUnixTime INT,
-	IN p_ZWaveGatewayTellsticZnetLiteVer2Id INT,
-	IN p_TelldusActionTypeOption VARCHAR(255),
-	IN p_TelldusActionValueTypeName VARCHAR(20),
-	IN p_TelldusActionValue VARCHAR(255),
-	IN p_TelldusUnitTelldusLiveNativeName VARCHAR(255),
+	IN p_TelldusUnit_Name VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
+	IN p_TelldusActionValueType_Name VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue VARCHAR(255),
 	OUT idOut INT)
 BEGIN
-	CALL GetInsertedTelldusAction('1', p_ZWaveGatewayTellsticZnetLiteVer2Id,p_TelldusActionTypeOption,p_TelldusActionValueTypeName,p_TelldusActionValue,p_TelldusUnitTelldusLiveNativeName,@InsertedTelldusAction_Id);
+	CALL GetInsertedTelldusAction('1', p_TelldusUnit_Name,p_TelldusActionType_ActionTypeOption,p_TelldusActionValueType_Name,p_TelldusActionValue_ActionValue,@InsertedTelldusAction_Id);
 	
 	/* register performed TelldusAction */
 	INSERT INTO TelldusActionsPerformed(PerformedTime, FK_TelldusAction_Id) VALUES (IFNULL(p_PerformedTelldusActionUnixTime, UNIX_TIMESTAMP()), @InsertedTelldusAction_Id);
