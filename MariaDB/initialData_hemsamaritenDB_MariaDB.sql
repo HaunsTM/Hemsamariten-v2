@@ -56,11 +56,14 @@ INSERT INTO TelldusActionTypes (ActionTypeOption) VALUES ('deviceHistory');
 
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('');
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('levelValue');
+INSERT INTO TelldusActionValueTypes (Name) VALUES ('commandValue');
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('effect_W');
 INSERT INTO TelldusActionValueTypes (Name) VALUES ('temperature_C');
 
-INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('on',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
-INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('off',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('on',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'commandValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('off',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'commandValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('up',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'commandValue'));
+INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('down',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'commandValue'));
 INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('0',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
 INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('1',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
 INSERT INTO TelldusActionValues (ActionValue,FK_TelldusActionValueType_Id) VALUES ('2',(SELECT Id FROM TelldusActionValueTypes WHERE Name = 'levelValue'));
