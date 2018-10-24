@@ -1,47 +1,8 @@
-------------------------------------------------------------------
---get Actions to be performed by LimitedCron
-SELECT Schedulers.LimitedCron, TelldusActionTypes.ActionTypeOption, TelldusUnits.Name, TelldusActionValues.ActionValue, TelldusActionValueTypes.Name
-FROM Schedulers
-	INNER JOIN TelldusActions_Schedulers ON Schedulers.Id = TelldusActions_Schedulers.FK_Scheduler_Id
-	INNER JOIN TelldusActions ON TelldusActions_Schedulers.FK_TelldusAction_Id = TelldusActions.Id
-	INNER JOIN TelldusActionTypes ON TelldusActions.FK_TelldusActionType_Id	= TelldusActionTypes.Id
-	INNER JOIN TelldusUnits ON TelldusActions.FK_TelldusUnit_Id = TelldusUnits.Id
-	INNER JOIN TelldusActionValues ON TelldusActions.FK_TelldusActionValue_Id = TelldusActionValues.Id
-	INNER JOIN TelldusActionValueTypes ON TelldusActionValues.FK_TelldusActionValueType_Id = TelldusActionValueTypes.Id
-WHERE Schedulers.LimitedCron = '* 45 20 * * TUE'
-AND TelldusActions.Active = 1
 
-
-/* get TelldusActionType_Id */
-SET @TelldusActionType_Id = (SELECT Id FROM TelldusActionTypes WHERE ActionTypeOption='TurnOn');
-
-
-/* get TelldusActionValueType_Id */
-SET @TelldusActionValueType_Id = (SELECT Id FROM TelldusActionValueTypes WHERE Name='Effect_W');
-
-/* get TelldusActionValue_Id */
-INSERT INTO TelldusActionValues(ActionValue, FK_TelldusActionValueType_Id) VALUES ('50',@TelldusActionValueType_Id) 
-	ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
-SET @TelldusActionValue_Id = LAST_INSERT_ID();
-
-
-
-/* get TelldusUnit_Id */
-SET @TelldusUnit_Id = (SELECT Id FROM TelldusUnits WHERE Name='A1');
-
-
-/* get TelldusAction_Id */
-INSERT INTO TelldusActions ( Active, CronExpression, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES ('1', IFNULL('EXEMPEL PÅ CRON',''), @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
-SET @TelldusAction_Id = LAST_INSERT_ID();
-
-
-/* register performed TelldusAction */
-INSERT INTO TelldusActionsPerformed(PerformedTime, FK_TelldusAction_Id) VALUES (UNIX_TIMESTAMP(),@TelldusAction_Id);
-SET @LastTelldusActionPerformed_Id = LAST_INSERT_ID();
-
-*******************
 DROP procedure IF EXISTS RegisterPerformedTelldusAction;
 DROP procedure IF EXISTS GetInsertedTelldusAction;
+DROP procedure IF EXISTS GetRegisteredScheduler;
+DROP procedure IF EXISTS RegisterTelldusAction_Scheduler;
 DROP procedure IF EXISTS RegisterPerformedMediaAction;
 DROP procedure IF EXISTS GetInsertedMediaAction;
 
@@ -78,7 +39,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-
 DELIMITER $$
 CREATE PROCEDURE RegisterPerformedTelldusAction (
 	IN p_PerformedTelldusActionUnixTime INT,
@@ -97,6 +57,59 @@ BEGIN
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE GetRegisteredScheduler (
+	IN p_Year		SMALLINT,
+	IN p_Month		TINYINT,
+	IN p_Day		TINYINT,
+	
+	IN p_WeekDay	TINYINT,
+	
+	IN p_Hour		TINYINT,
+	IN p_Minute		TINYINT,
+	IN p_Second		TINYINT,
+	OUT idOut INT)
+BEGIN
+	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
+	
+	INSERT INTO Scheduler(Year, Month, Day, WeekDay, Hour, Minute, Second) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, p_Scheduler_Second);
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE RegisterTelldusAction_Scheduler ( 
+	IN p_TelldusAction_Active				BIT,
+	IN p_TelldusUnit_Name 					VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
+	IN p_TelldusActionValueType_Name 		VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
+	IN p_Scheduler_Year						SMALLINT,
+	IN p_Scheduler_Month					TINYINT,
+	IN p_Scheduler_Day						TINYINT,	
+	IN p_Scheduler_WeekDay					TINYINT,	
+	IN p_Scheduler_Hour						TINYINT,
+	IN p_Scheduler_Minute					TINYINT,
+	IN p_Scheduler_Second					TINYINT,
+	OUT idOut INT)
+BEGIN
+	/* Inserts a TelldusAction with Scheduler (in TelldusActions_Schedulers) and returns Id for the inserted row. If an identical TelldusActions_Schedulers already is exists, its Id is returned. */
+	
+	CALL GetRegisteredScheduler(p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, p_Scheduler_Second, @Scheduler_Id);
+
+	/* get TelldusActionType_Id */
+	CALL GetInsertedTelldusAction(p_TelldusAction_Active,_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption, p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusAction_Id);
+	
+	
+	INSERT INTO TelldusActions_Schedulers(FK_TelldusAction_Id, FK_Scheduler_Id) VALUES (@TelldusAction_Id, @Scheduler_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);	
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+
 
 DELIMITER $$
 CREATE PROCEDURE GetInsertedMediaAction ( 

@@ -86,7 +86,15 @@ CREATE TABLE TelldusActions_Schedulers (
 CREATE TABLE Schedulers (
 	Id			INT NOT NULL AUTO_INCREMENT,
 	
-	LimitedCron	VARCHAR(30) NOT NULL,
+	Year		SMALLINT,
+	Month		TINYINT,
+	Day			TINYINT,
+	
+	WeekDay		TINYINT,
+	
+	Hour		TINYINT,
+	Minute		TINYINT,
+	Second		TINYINT,
 		
 	PRIMARY KEY (Id)
 );
@@ -103,9 +111,7 @@ CREATE TABLE MediaActions_Schedulers (
 CREATE TABLE MediaActions (
 	Id						INT NOT NULL AUTO_INCREMENT,
 	Active					BIT NOT NULL,
-	
-	CronExpression			VARCHAR(30) NOT NULL,
-	
+		
 	FK_MediaSource_Id		INT NOT NULL,	
 	FK_MediaOutputVolume_Id	INT NOT NULL,
 	FK_MediaOutput_Id		INT NOT NULL,
@@ -212,14 +218,14 @@ ALTER TABLE	TelldusActions ADD UNIQUE (FK_TelldusActionType_Id, FK_TelldusAction
 	
 	
 ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
-ALTER TABLE	Schedulers ADD UNIQUE (LimitedCron);
+ALTER TABLE	Schedulers ADD UNIQUE (Year, Month, Day, WeekDay, Hour, Minute, Second); 
 ALTER TABLE	MediaActions_Schedulers ADD UNIQUE (FK_MediaAction_Id, FK_Scheduler_Id);
 	
 ALTER TABLE	MediaSources ADD UNIQUE (Name);
 ALTER TABLE	MediaSources ADD UNIQUE (Url);
 ALTER TABLE	MediaOutputs ADD UNIQUE (MediaWebserviceUrl);
 
-ALTER TABLE	MediaActions ADD UNIQUE (CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
+ALTER TABLE	MediaActions ADD UNIQUE (FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
 
 INSERT INTO TelldusUnitLocations (Name) VALUES ('*Ingen särskild plats*');
 INSERT INTO TelldusUnitLocations (Name) VALUES ('Garage');
@@ -721,8 +727,11 @@ INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Resume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('SetVolume');
 INSERT INTO MediaActionTypes (ActionTypeOption) VALUES ('Stop');
 
+
 DROP procedure IF EXISTS RegisterPerformedTelldusAction;
 DROP procedure IF EXISTS GetInsertedTelldusAction;
+DROP procedure IF EXISTS GetRegisteredScheduler;
+DROP procedure IF EXISTS RegisterTelldusAction_Scheduler;
 DROP procedure IF EXISTS RegisterPerformedMediaAction;
 DROP procedure IF EXISTS GetInsertedMediaAction;
 
@@ -759,7 +768,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-
 DELIMITER $$
 CREATE PROCEDURE RegisterPerformedTelldusAction (
 	IN p_PerformedTelldusActionUnixTime INT,
@@ -778,6 +786,59 @@ BEGIN
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE GetRegisteredScheduler (
+	IN p_Year		SMALLINT,
+	IN p_Month		TINYINT,
+	IN p_Day		TINYINT,
+	
+	IN p_WeekDay	TINYINT,
+	
+	IN p_Hour		TINYINT,
+	IN p_Minute		TINYINT,
+	IN p_Second		TINYINT,
+	OUT idOut INT)
+BEGIN
+	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
+	
+	INSERT INTO Scheduler(Year, Month, Day, WeekDay, Hour, Minute, Second) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, p_Scheduler_Second);
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE RegisterTelldusAction_Scheduler ( 
+	IN p_TelldusAction_Active				BIT,
+	IN p_TelldusUnit_Name 					VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
+	IN p_TelldusActionValueType_Name 		VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
+	IN p_Scheduler_Year						SMALLINT,
+	IN p_Scheduler_Month					TINYINT,
+	IN p_Scheduler_Day						TINYINT,	
+	IN p_Scheduler_WeekDay					TINYINT,	
+	IN p_Scheduler_Hour						TINYINT,
+	IN p_Scheduler_Minute					TINYINT,
+	IN p_Scheduler_Second					TINYINT,
+	OUT idOut INT)
+BEGIN
+	/* Inserts a TelldusAction with Scheduler (in TelldusActions_Schedulers) and returns Id for the inserted row. If an identical TelldusActions_Schedulers already is exists, its Id is returned. */
+	
+	CALL GetRegisteredScheduler(p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, p_Scheduler_Second, @Scheduler_Id);
+
+	/* get TelldusActionType_Id */
+	CALL GetInsertedTelldusAction(p_TelldusAction_Active,_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption, p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusAction_Id);
+	
+	
+	INSERT INTO TelldusActions_Schedulers(FK_TelldusAction_Id, FK_Scheduler_Id) VALUES (@TelldusAction_Id, @Scheduler_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);	
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+
 
 DELIMITER $$
 CREATE PROCEDURE GetInsertedMediaAction ( 

@@ -86,7 +86,15 @@ CREATE TABLE TelldusActions_Schedulers (
 CREATE TABLE Schedulers (
 	Id			INT NOT NULL AUTO_INCREMENT,
 	
-	LimitedCron	VARCHAR(30) NOT NULL,
+	Year		SMALLINT,
+	Month		TINYINT,
+	Day			TINYINT,
+	
+	WeekDay		TINYINT,
+	
+	Hour		TINYINT,
+	Minute		TINYINT,
+	Second		TINYINT,
 		
 	PRIMARY KEY (Id)
 );
@@ -103,9 +111,7 @@ CREATE TABLE MediaActions_Schedulers (
 CREATE TABLE MediaActions (
 	Id						INT NOT NULL AUTO_INCREMENT,
 	Active					BIT NOT NULL,
-	
-	CronExpression			VARCHAR(30) NOT NULL,
-	
+		
 	FK_MediaSource_Id		INT NOT NULL,	
 	FK_MediaOutputVolume_Id	INT NOT NULL,
 	FK_MediaOutput_Id		INT NOT NULL,
@@ -212,12 +218,12 @@ ALTER TABLE	TelldusActions ADD UNIQUE (FK_TelldusActionType_Id, FK_TelldusAction
 	
 	
 ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
-ALTER TABLE	Schedulers ADD UNIQUE (LimitedCron);
+ALTER TABLE	Schedulers ADD UNIQUE (Year, Month, Day, WeekDay, Hour, Minute, Second); 
 ALTER TABLE	MediaActions_Schedulers ADD UNIQUE (FK_MediaAction_Id, FK_Scheduler_Id);
 	
 ALTER TABLE	MediaSources ADD UNIQUE (Name);
 ALTER TABLE	MediaSources ADD UNIQUE (Url);
 ALTER TABLE	MediaOutputs ADD UNIQUE (MediaWebserviceUrl);
 
-ALTER TABLE	MediaActions ADD UNIQUE (CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
+ALTER TABLE	MediaActions ADD UNIQUE (FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id);
 
