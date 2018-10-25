@@ -791,10 +791,8 @@ DELIMITER $$
 CREATE PROCEDURE GetRegisteredScheduler (
 	IN p_Year		SMALLINT,
 	IN p_Month		TINYINT,
-	IN p_Day		TINYINT,
-	
-	IN p_WeekDay	TINYINT,
-	
+	IN p_Day		TINYINT,	
+	IN p_WeekDay	TINYINT,	
 	IN p_Hour		TINYINT,
 	IN p_Minute		TINYINT,
 	IN p_Second		TINYINT,
@@ -837,8 +835,6 @@ BEGIN
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
 DELIMITER ;
-
-
 
 DELIMITER $$
 CREATE PROCEDURE GetInsertedMediaAction ( 
