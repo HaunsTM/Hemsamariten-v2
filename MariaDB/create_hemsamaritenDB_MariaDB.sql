@@ -86,15 +86,12 @@ CREATE TABLE TelldusActions_Schedulers (
 CREATE TABLE Schedulers (
 	Id			INT NOT NULL AUTO_INCREMENT,
 	
-	Year		SMALLINT,
-	Month		TINYINT,
-	Day			TINYINT,
-	
-	WeekDay		TINYINT,
-	
-	Hour		TINYINT,
-	Minute		TINYINT,
-	Second		TINYINT,
+	Year		CHAR(4),
+	Month		CHAR(2),
+	Day			CHAR(2),
+	WeekDay		CHAR(2),
+	Hour		CHAR(2),
+	Minute		CHAR(2),
 		
 	PRIMARY KEY (Id)
 );
@@ -218,7 +215,9 @@ ALTER TABLE	TelldusActions ADD UNIQUE (FK_TelldusActionType_Id, FK_TelldusAction
 	
 	
 ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
-ALTER TABLE	Schedulers ADD UNIQUE (Year, Month, Day, WeekDay, Hour, Minute, Second); 
+
+ALTER TABLE	Schedulers ADD UNIQUE (Year, Month, Day, WeekDay, Hour, Minute); 
+
 ALTER TABLE	MediaActions_Schedulers ADD UNIQUE (FK_MediaAction_Id, FK_Scheduler_Id);
 	
 ALTER TABLE	MediaSources ADD UNIQUE (Name);

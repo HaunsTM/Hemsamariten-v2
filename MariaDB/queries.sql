@@ -8,11 +8,11 @@ DROP procedure IF EXISTS GetInsertedMediaAction;
 
 DELIMITER $$
 CREATE PROCEDURE GetInsertedTelldusAction ( 
-	IN p_Active BIT,
-	IN p_TelldusUnit_Name VARCHAR(255),
+	IN p_Active 							BIT,
+	IN p_TelldusUnit_Name 					VARCHAR(255),
 	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
-	IN p_TelldusActionValueType_Name VARCHAR(20),
-	IN p_TelldusActionValue_ActionValue VARCHAR(255),
+	IN p_TelldusActionValueType_Name 		VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
 	OUT idOut INT)
 BEGIN
 	/* Inserts an Action and returns Id for the inserted row. If an identical Action already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
@@ -41,11 +41,11 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE RegisterPerformedTelldusAction (
-	IN p_PerformedTelldusActionUnixTime INT,
-	IN p_TelldusUnit_Name VARCHAR(255),
+	IN p_PerformedTelldusActionUnixTime 	INT,
+	IN p_TelldusUnit_Name 					VARCHAR(255),
 	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
-	IN p_TelldusActionValueType_Name VARCHAR(20),
-	IN p_TelldusActionValue_ActionValue VARCHAR(255),
+	IN p_TelldusActionValueType_Name 		VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
 	OUT idOut INT)
 BEGIN
 	CALL GetInsertedTelldusAction('1', p_TelldusUnit_Name,p_TelldusActionType_ActionTypeOption,p_TelldusActionValueType_Name,p_TelldusActionValue_ActionValue,@InsertedTelldusAction_Id);
@@ -60,15 +60,13 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE GetRegisteredScheduler (
-	IN p_Year		SMALLINT,
-	IN p_Month		TINYINT,
-	IN p_Day		TINYINT,
-	
-	IN p_WeekDay	TINYINT,
-	
-	IN p_Hour		TINYINT,
-	IN p_Minute		TINYINT,
-	IN p_Second		TINYINT,
+	IN p_Year		CHAR(4),
+	IN p_Month		CHAR(2),
+	IN p_Day		CHAR(2),	
+	IN p_WeekDay	CHAR(2),	
+	IN p_Hour		CHAR(2),
+	IN p_Minute		CHAR(2),
+	IN p_Second		CHAR(2),
 	OUT idOut INT)
 BEGIN
 	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
@@ -86,13 +84,13 @@ CREATE PROCEDURE RegisterTelldusAction_Scheduler (
 	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
 	IN p_TelldusActionValueType_Name 		VARCHAR(20),
 	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
-	IN p_Scheduler_Year						SMALLINT,
-	IN p_Scheduler_Month					TINYINT,
-	IN p_Scheduler_Day						TINYINT,	
-	IN p_Scheduler_WeekDay					TINYINT,	
-	IN p_Scheduler_Hour						TINYINT,
-	IN p_Scheduler_Minute					TINYINT,
-	IN p_Scheduler_Second					TINYINT,
+	IN p_Scheduler_Year						CHAR(4),
+	IN p_Scheduler_Month					CHAR(2),
+	IN p_Scheduler_Day						CHAR(2),	
+	IN p_Scheduler_WeekDay					CHAR(2),	
+	IN p_Scheduler_Hour						CHAR(2),
+	IN p_Scheduler_Minute					CHAR(2),
+	IN p_Scheduler_Second					CHAR(2),
 	OUT idOut INT)
 BEGIN
 	/* Inserts a TelldusAction with Scheduler (in TelldusActions_Schedulers) and returns Id for the inserted row. If an identical TelldusActions_Schedulers already is exists, its Id is returned. */
@@ -109,16 +107,14 @@ BEGIN
 END$$
 DELIMITER ;
 
-
-
 DELIMITER $$
 CREATE PROCEDURE GetInsertedMediaAction ( 
-	IN p_Active BIT,
-	IN p_MediaSourceName VARCHAR(255),
-	IN p_MediaOutputVolumeValue TINYINT,
-	IN p_MediaOutputWebserviceUrl VARCHAR(100),
-	IN p_MediaActionTypeOption VARCHAR(255),
-	OUT idOut INT)
+	IN p_Active 					BIT,
+	IN p_MediaSourceName 			VARCHAR(255),
+	IN p_MediaOutputVolumeValue 	TINYINT,
+	IN p_MediaOutputWebserviceUrl	VARCHAR(100),
+	IN p_MediaActionTypeOption 		VARCHAR(255),
+	OUT idOut						INT)
 BEGIN
 	/* Inserts an Action and returns Id for the inserted row. If an identical Action already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
 	
@@ -143,12 +139,12 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE RegisterPerformedMediaAction (
-	IN p_PerformedMediaActionUnixTime INT,
-	IN p_MediaSourceName VARCHAR(255),
-	IN p_MediaOutputVolumeValue TINYINT,
-	IN p_MediaOutputWebserviceUrl VARCHAR(100),
-	IN p_MediaActionTypeOption VARCHAR(255),
-	OUT idOut INT)
+	IN p_PerformedMediaActionUnixTime 	INT,
+	IN p_MediaSourceName 				VARCHAR(255),
+	IN p_MediaOutputVolumeValue 		TINYINT,
+	IN p_MediaOutputWebserviceUrl 		VARCHAR(100),
+	IN p_MediaActionTypeOption 			VARCHAR(255),
+	OUT idOut 							INT)
 BEGIN
 	CALL GetInsertedMediaAction('1', p_MediaSourceName, p_MediaOutputVolumeValue, p_MediaOutputWebserviceUrl, p_MediaActionTypeOption, @InsertedMediaAction_Id);
 	
