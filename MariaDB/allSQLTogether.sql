@@ -215,7 +215,9 @@ ALTER TABLE	TelldusActions ADD UNIQUE (FK_TelldusActionType_Id, FK_TelldusAction
 	
 	
 ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
-ALTER TABLE	Schedulers ADD UNIQUE (Year, Month, Day, WeekDay, Hour, Minute, Second); 
+
+ALTER TABLE	Schedulers ADD UNIQUE (Year, Month, Day, WeekDay, Hour, Minute); 
+
 ALTER TABLE	MediaActions_Schedulers ADD UNIQUE (FK_MediaAction_Id, FK_Scheduler_Id);
 	
 ALTER TABLE	MediaSources ADD UNIQUE (Name);
@@ -786,18 +788,18 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE GetRegisteredScheduler (
-	IN p_Year		CHAR(4),
-	IN p_Month		CHAR(2),
-	IN p_Day		CHAR(2),	
-	IN p_WeekDay	CHAR(2),	
-	IN p_Hour		CHAR(2),
-	IN p_Minute		CHAR(2),
-	IN p_Second		CHAR(2),
+	IN p_Scheduler_Year		CHAR(4),
+	IN p_Scheduler_Month	CHAR(2),
+	IN p_Scheduler_Day		CHAR(2),	
+	IN p_Scheduler_WeekDay	CHAR(2),	
+	IN p_Scheduler_Hour		CHAR(2),
+	IN p_Scheduler_Minute	CHAR(2),
+	IN p_Scheduler_Second	CHAR(2),
 	OUT idOut INT)
 BEGIN
 	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
 	
-	INSERT INTO Scheduler(Year, Month, Day, WeekDay, Hour, Minute, Second) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, p_Scheduler_Second);
+	INSERT INTO Scheduler(Year, Month, Day, WeekDay, Hour, Minute, Second) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
@@ -816,12 +818,11 @@ CREATE PROCEDURE RegisterTelldusAction_Scheduler (
 	IN p_Scheduler_WeekDay					CHAR(2),	
 	IN p_Scheduler_Hour						CHAR(2),
 	IN p_Scheduler_Minute					CHAR(2),
-	IN p_Scheduler_Second					CHAR(2),
 	OUT idOut INT)
 BEGIN
 	/* Inserts a TelldusAction with Scheduler (in TelldusActions_Schedulers) and returns Id for the inserted row. If an identical TelldusActions_Schedulers already is exists, its Id is returned. */
 	
-	CALL GetRegisteredScheduler(p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, p_Scheduler_Second, @Scheduler_Id);
+	CALL GetRegisteredScheduler(p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, @Scheduler_Id);
 
 	/* get TelldusActionType_Id */
 	CALL GetInsertedTelldusAction(p_TelldusAction_Active,_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption, p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusAction_Id);
