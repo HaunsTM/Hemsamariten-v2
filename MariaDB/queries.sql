@@ -70,7 +70,7 @@ CREATE PROCEDURE GetRegisteredScheduler (
 BEGIN
 	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
 	
-	INSERT INTO Schedulers(Year, Month, Day, WeekDay, Hour, Minute) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute);
+	INSERT INTO Schedulers(Year, Month, Day, WeekDay, Hour, Minute) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute)ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$

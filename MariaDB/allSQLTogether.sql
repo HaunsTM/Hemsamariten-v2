@@ -794,12 +794,11 @@ CREATE PROCEDURE GetRegisteredScheduler (
 	IN p_Scheduler_WeekDay	CHAR(2),	
 	IN p_Scheduler_Hour		CHAR(2),
 	IN p_Scheduler_Minute	CHAR(2),
-	IN p_Scheduler_Second	CHAR(2),
 	OUT idOut INT)
 BEGIN
 	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
 	
-	INSERT INTO Scheduler(Year, Month, Day, WeekDay, Hour, Minute, Second) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute);
+	INSERT INTO Schedulers(Year, Month, Day, WeekDay, Hour, Minute) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute)ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
@@ -825,7 +824,7 @@ BEGIN
 	CALL GetRegisteredScheduler(p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, @Scheduler_Id);
 
 	/* get TelldusActionType_Id */
-	CALL GetInsertedTelldusAction(p_TelldusAction_Active,_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption, p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusAction_Id);
+	CALL GetInsertedTelldusAction(p_TelldusAction_Active, p_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption, p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusAction_Id);
 	
 	
 	INSERT INTO TelldusActions_Schedulers(FK_TelldusAction_Id, FK_Scheduler_Id) VALUES (@TelldusAction_Id, @Scheduler_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);	
