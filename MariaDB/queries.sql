@@ -22,15 +22,16 @@ BEGIN
 
 	/* get TelldusActionType_Id */
 	SET @TelldusActionType_Id = (SELECT Id FROM TelldusActionTypes WHERE ActionTypeOption = p_TelldusActionType_ActionTypeOption);
-	
-	/* get TelldusActionValueType_Id */
-	SET @TelldusActionValueType_Id = (SELECT Id FROM TelldusActionValueTypes WHERE Name = p_TelldusActionValueType_Name);
-	
+
 	/* get TelldusActionValue_Id */
-	INSERT INTO TelldusActionValues(ActionValue, FK_TelldusActionValueType_Id) VALUES (p_TelldusActionValue_ActionValue, @TelldusActionValueType_Id) 
-		ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
-	SET @TelldusActionValue_Id = LAST_INSERT_ID();
-	
+	SET @TelldusActionValue_Id = 
+	(SELECT
+		TelldusActionValues.Id AS TelldusActionValues_Id
+		FROM TelldusActionValues INNER JOIN TelldusActionValueTypes 
+			ON TelldusActionValues.FK_TelldusActionValueType_Id = TelldusActionValueTypes.Id
+		WHERE TelldusActionValues.ActionValue = p_TelldusActionValue_ActionValue 
+			AND TelldusActionValueTypes.Name = p_TelldusActionValueType_Name);
+
 	
 	/* get TelldusAction_Id */
 	INSERT INTO TelldusActions ( Active, FK_TelldusActionType_Id, FK_TelldusActionValue_Id, FK_TelldusUnit_Id) VALUES (p_Active, @TelldusActionType_Id, @TelldusActionValue_Id, @TelldusUnit_Id) ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
