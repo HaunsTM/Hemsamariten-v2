@@ -84,11 +84,11 @@ CREATE PROCEDURE RegisterTelldusAction_Scheduler (
 	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
 	IN p_TelldusActionValueType_Name 		VARCHAR(20),
 	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
-	IN p_Scheduler_FullYear						CHAR(4),
+	IN p_Scheduler_FullYear					CHAR(4),
 	IN p_Scheduler_Month					CHAR(2),
 	IN p_Scheduler_Date						CHAR(2),	
-	IN p_Scheduler_Day					CHAR(2),	
-	IN p_Scheduler_Hours						CHAR(2),
+	IN p_Scheduler_Day						CHAR(2),	
+	IN p_Scheduler_Hours					CHAR(2),
 	IN p_Scheduler_Minutes					CHAR(2),
 	OUT idOut INT)
 BEGIN
@@ -110,7 +110,7 @@ DELIMITER $$
 CREATE PROCEDURE GetInsertedMediaAction ( 
 	IN p_Active 					BIT,
 	IN p_MediaSourceName 			VARCHAR(255),
-	IN p_MediaOutputValue 	TINYINT,
+	IN p_MediaOutputValue 			TINYINT,
 	IN p_MediaOutputWebserviceUrl	VARCHAR(100),
 	IN p_MediaActionTypeOption 		VARCHAR(255),
 	OUT idOut						INT)
@@ -140,7 +140,7 @@ DELIMITER $$
 CREATE PROCEDURE RegisterPerformedMediaAction (
 	IN p_PerformedMediaActionUnixTime 	INT,
 	IN p_MediaSourceName 				VARCHAR(255),
-	IN p_MediaOutputValue 		TINYINT,
+	IN p_MediaOutputValue 				TINYINT,
 	IN p_MediaOutputWebserviceUrl 		VARCHAR(100),
 	IN p_MediaActionTypeOption 			VARCHAR(255),
 	OUT idOut 							INT)
