@@ -86,12 +86,12 @@ CREATE TABLE TelldusActions_Schedulers (
 CREATE TABLE Schedulers (
 	Id			INT NOT NULL AUTO_INCREMENT,
 	
-	Year		CHAR(4),
+	FullYear	CHAR(4),
 	Month		CHAR(2),
+	Date		CHAR(2),
 	Day			CHAR(2),
-	WeekDay		CHAR(2),
-	Hour		CHAR(2),
-	Minute		CHAR(2),
+	Hours		CHAR(2),
+	Minutes		CHAR(2),
 		
 	PRIMARY KEY (Id)
 );
@@ -161,7 +161,7 @@ CREATE TABLE MediaCountries (
 CREATE TABLE MediaOutputVolumes (
 	Id			INT NOT NULL AUTO_INCREMENT,
 	
-	VolumeValue	TINYINT NOT NULL,
+	Value	TINYINT NOT NULL,
 	
 	PRIMARY KEY (Id)
 );
@@ -216,7 +216,7 @@ ALTER TABLE	TelldusActions ADD UNIQUE (FK_TelldusActionType_Id, FK_TelldusAction
 	
 ALTER TABLE	TelldusActions_Schedulers ADD UNIQUE (FK_TelldusAction_Id, FK_Scheduler_Id);
 
-ALTER TABLE	Schedulers ADD UNIQUE (Year, Month, Day, WeekDay, Hour, Minute); 
+ALTER TABLE	Schedulers ADD UNIQUE (FullYear, Month, Date, Day, Hours, Minutes); 
 
 ALTER TABLE	MediaActions_Schedulers ADD UNIQUE (FK_MediaAction_Id, FK_Scheduler_Id);
 	
@@ -441,7 +441,7 @@ INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocati
 
 INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Grovkök golvtermostat',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'under elcentralen till vänster');
 INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Huvudtermostat',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Grovkök'),'under elcentralen till vänster');
-INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Uterum termostat',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'under elcentralen till vänster');
+INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Uterum golvtermostat',(SELECT Id FROM TelldusUnitTypes WHERE Name = 'Z-Wave - HeatItZWaveThermostat'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Uterum'),'under elcentralen till vänster');
 INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Ringklocka Alarm',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - Bell'),(SELECT Id FROM TelldusUnitLocations WHERE Name = 'Hus - fasad'),'grovköksingång från parkeringen');
 INSERT INTO TelldusUnits (Active,Name,FK_TelldusUnitType_Id,FK_TelldusUnitLocation_Id,LocationDesciption) VALUES (1,'Skymning',(SELECT Id FROM TelldusUnitTypes WHERE Name = '433 MHz - LightSensor'),(SELECT Id FROM TelldusUnitLocations WHERE Name = '*Ingen särskild plats*'),'');
 
@@ -616,107 +616,107 @@ INSERT INTO MediaSources (Name,Url,FK_MediaCategoryType_Id,FK_MediaCountry_Id) V
 INSERT INTO MediaSources (Name,Url,FK_MediaCategoryType_Id,FK_MediaCountry_Id) VALUES ('BBC WM 95.6 (Lokalradio)','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrwm_mf_p',(SELECT Id FROM MediaCategoryTypes WHERE Name = 'InternetStreamRadio'),(SELECT Id FROM MediaCountries WHERE Name = 'England'));
 INSERT INTO MediaSources (Name,Url,FK_MediaCategoryType_Id,FK_MediaCountry_Id) VALUES ('BBC Radio York (Lokalradio)','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lryork_mf_p',(SELECT Id FROM MediaCategoryTypes WHERE Name = 'InternetStreamRadio'), (SELECT Id FROM MediaCountries WHERE Name = 'England'));
 
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (0);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (1);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (2);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (3);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (4);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (5);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (6);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (7);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (8);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (9);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (10);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (11);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (12);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (13);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (14);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (15);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (16);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (17);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (18);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (19);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (20);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (21);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (22);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (23);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (24);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (25);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (26);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (27);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (28);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (29);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (30);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (31);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (32);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (33);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (34);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (35);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (36);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (37);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (38);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (39);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (40);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (41);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (42);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (43);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (44);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (45);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (46);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (47);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (48);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (49);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (50);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (51);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (52);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (53);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (54);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (55);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (56);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (57);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (58);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (59);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (60);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (61);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (62);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (63);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (64);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (65);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (66);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (67);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (68);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (69);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (70);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (71);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (72);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (73);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (74);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (75);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (76);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (77);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (78);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (79);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (80);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (81);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (82);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (83);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (84);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (85);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (86);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (87);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (88);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (89);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (90);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (91);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (92);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (93);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (94);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (95);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (96);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (97);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (98);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (99);
-INSERT INTO MediaOutputVolumes (VolumeValue) VALUES (100);
+INSERT INTO MediaOutputVolumes (Value) VALUES (0);
+INSERT INTO MediaOutputVolumes (Value) VALUES (1);
+INSERT INTO MediaOutputVolumes (Value) VALUES (2);
+INSERT INTO MediaOutputVolumes (Value) VALUES (3);
+INSERT INTO MediaOutputVolumes (Value) VALUES (4);
+INSERT INTO MediaOutputVolumes (Value) VALUES (5);
+INSERT INTO MediaOutputVolumes (Value) VALUES (6);
+INSERT INTO MediaOutputVolumes (Value) VALUES (7);
+INSERT INTO MediaOutputVolumes (Value) VALUES (8);
+INSERT INTO MediaOutputVolumes (Value) VALUES (9);
+INSERT INTO MediaOutputVolumes (Value) VALUES (10);
+INSERT INTO MediaOutputVolumes (Value) VALUES (11);
+INSERT INTO MediaOutputVolumes (Value) VALUES (12);
+INSERT INTO MediaOutputVolumes (Value) VALUES (13);
+INSERT INTO MediaOutputVolumes (Value) VALUES (14);
+INSERT INTO MediaOutputVolumes (Value) VALUES (15);
+INSERT INTO MediaOutputVolumes (Value) VALUES (16);
+INSERT INTO MediaOutputVolumes (Value) VALUES (17);
+INSERT INTO MediaOutputVolumes (Value) VALUES (18);
+INSERT INTO MediaOutputVolumes (Value) VALUES (19);
+INSERT INTO MediaOutputVolumes (Value) VALUES (20);
+INSERT INTO MediaOutputVolumes (Value) VALUES (21);
+INSERT INTO MediaOutputVolumes (Value) VALUES (22);
+INSERT INTO MediaOutputVolumes (Value) VALUES (23);
+INSERT INTO MediaOutputVolumes (Value) VALUES (24);
+INSERT INTO MediaOutputVolumes (Value) VALUES (25);
+INSERT INTO MediaOutputVolumes (Value) VALUES (26);
+INSERT INTO MediaOutputVolumes (Value) VALUES (27);
+INSERT INTO MediaOutputVolumes (Value) VALUES (28);
+INSERT INTO MediaOutputVolumes (Value) VALUES (29);
+INSERT INTO MediaOutputVolumes (Value) VALUES (30);
+INSERT INTO MediaOutputVolumes (Value) VALUES (31);
+INSERT INTO MediaOutputVolumes (Value) VALUES (32);
+INSERT INTO MediaOutputVolumes (Value) VALUES (33);
+INSERT INTO MediaOutputVolumes (Value) VALUES (34);
+INSERT INTO MediaOutputVolumes (Value) VALUES (35);
+INSERT INTO MediaOutputVolumes (Value) VALUES (36);
+INSERT INTO MediaOutputVolumes (Value) VALUES (37);
+INSERT INTO MediaOutputVolumes (Value) VALUES (38);
+INSERT INTO MediaOutputVolumes (Value) VALUES (39);
+INSERT INTO MediaOutputVolumes (Value) VALUES (40);
+INSERT INTO MediaOutputVolumes (Value) VALUES (41);
+INSERT INTO MediaOutputVolumes (Value) VALUES (42);
+INSERT INTO MediaOutputVolumes (Value) VALUES (43);
+INSERT INTO MediaOutputVolumes (Value) VALUES (44);
+INSERT INTO MediaOutputVolumes (Value) VALUES (45);
+INSERT INTO MediaOutputVolumes (Value) VALUES (46);
+INSERT INTO MediaOutputVolumes (Value) VALUES (47);
+INSERT INTO MediaOutputVolumes (Value) VALUES (48);
+INSERT INTO MediaOutputVolumes (Value) VALUES (49);
+INSERT INTO MediaOutputVolumes (Value) VALUES (50);
+INSERT INTO MediaOutputVolumes (Value) VALUES (51);
+INSERT INTO MediaOutputVolumes (Value) VALUES (52);
+INSERT INTO MediaOutputVolumes (Value) VALUES (53);
+INSERT INTO MediaOutputVolumes (Value) VALUES (54);
+INSERT INTO MediaOutputVolumes (Value) VALUES (55);
+INSERT INTO MediaOutputVolumes (Value) VALUES (56);
+INSERT INTO MediaOutputVolumes (Value) VALUES (57);
+INSERT INTO MediaOutputVolumes (Value) VALUES (58);
+INSERT INTO MediaOutputVolumes (Value) VALUES (59);
+INSERT INTO MediaOutputVolumes (Value) VALUES (60);
+INSERT INTO MediaOutputVolumes (Value) VALUES (61);
+INSERT INTO MediaOutputVolumes (Value) VALUES (62);
+INSERT INTO MediaOutputVolumes (Value) VALUES (63);
+INSERT INTO MediaOutputVolumes (Value) VALUES (64);
+INSERT INTO MediaOutputVolumes (Value) VALUES (65);
+INSERT INTO MediaOutputVolumes (Value) VALUES (66);
+INSERT INTO MediaOutputVolumes (Value) VALUES (67);
+INSERT INTO MediaOutputVolumes (Value) VALUES (68);
+INSERT INTO MediaOutputVolumes (Value) VALUES (69);
+INSERT INTO MediaOutputVolumes (Value) VALUES (70);
+INSERT INTO MediaOutputVolumes (Value) VALUES (71);
+INSERT INTO MediaOutputVolumes (Value) VALUES (72);
+INSERT INTO MediaOutputVolumes (Value) VALUES (73);
+INSERT INTO MediaOutputVolumes (Value) VALUES (74);
+INSERT INTO MediaOutputVolumes (Value) VALUES (75);
+INSERT INTO MediaOutputVolumes (Value) VALUES (76);
+INSERT INTO MediaOutputVolumes (Value) VALUES (77);
+INSERT INTO MediaOutputVolumes (Value) VALUES (78);
+INSERT INTO MediaOutputVolumes (Value) VALUES (79);
+INSERT INTO MediaOutputVolumes (Value) VALUES (80);
+INSERT INTO MediaOutputVolumes (Value) VALUES (81);
+INSERT INTO MediaOutputVolumes (Value) VALUES (82);
+INSERT INTO MediaOutputVolumes (Value) VALUES (83);
+INSERT INTO MediaOutputVolumes (Value) VALUES (84);
+INSERT INTO MediaOutputVolumes (Value) VALUES (85);
+INSERT INTO MediaOutputVolumes (Value) VALUES (86);
+INSERT INTO MediaOutputVolumes (Value) VALUES (87);
+INSERT INTO MediaOutputVolumes (Value) VALUES (88);
+INSERT INTO MediaOutputVolumes (Value) VALUES (89);
+INSERT INTO MediaOutputVolumes (Value) VALUES (90);
+INSERT INTO MediaOutputVolumes (Value) VALUES (91);
+INSERT INTO MediaOutputVolumes (Value) VALUES (92);
+INSERT INTO MediaOutputVolumes (Value) VALUES (93);
+INSERT INTO MediaOutputVolumes (Value) VALUES (94);
+INSERT INTO MediaOutputVolumes (Value) VALUES (95);
+INSERT INTO MediaOutputVolumes (Value) VALUES (96);
+INSERT INTO MediaOutputVolumes (Value) VALUES (97);
+INSERT INTO MediaOutputVolumes (Value) VALUES (98);
+INSERT INTO MediaOutputVolumes (Value) VALUES (99);
+INSERT INTO MediaOutputVolumes (Value) VALUES (100);
 
 INSERT INTO MediaOutputs (MediaWebserviceUrl) VALUES ('http://10.0.0.1/example.com/playservice_POST.svc');
 
@@ -789,17 +789,17 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE GetRegisteredScheduler (
-	IN p_Scheduler_Year		CHAR(4),
+	IN p_Scheduler_FullYear	CHAR(4),
 	IN p_Scheduler_Month	CHAR(2),
+	IN p_Scheduler_Date		CHAR(2),	
 	IN p_Scheduler_Day		CHAR(2),	
-	IN p_Scheduler_WeekDay	CHAR(2),	
-	IN p_Scheduler_Hour		CHAR(2),
-	IN p_Scheduler_Minute	CHAR(2),
+	IN p_Scheduler_Hours	CHAR(2),
+	IN p_Scheduler_Minutes	CHAR(2),
 	OUT idOut INT)
 BEGIN
 	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
 	
-	INSERT INTO Schedulers(Year, Month, Day, WeekDay, Hour, Minute) VALUES (p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute)ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+	INSERT INTO Schedulers(FullYear, Month, Date, Day, Hours, Minutes) VALUES (p_Scheduler_FullYear, p_Scheduler_Month, p_Scheduler_Date, p_Scheduler_Day, p_Scheduler_Hours, p_Scheduler_Minutes)ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
@@ -812,17 +812,17 @@ CREATE PROCEDURE RegisterTelldusAction_Scheduler (
 	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
 	IN p_TelldusActionValueType_Name 		VARCHAR(20),
 	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
-	IN p_Scheduler_Year						CHAR(4),
+	IN p_Scheduler_FullYear						CHAR(4),
 	IN p_Scheduler_Month					CHAR(2),
-	IN p_Scheduler_Day						CHAR(2),	
-	IN p_Scheduler_WeekDay					CHAR(2),	
-	IN p_Scheduler_Hour						CHAR(2),
-	IN p_Scheduler_Minute					CHAR(2),
+	IN p_Scheduler_Date						CHAR(2),	
+	IN p_Scheduler_Day					CHAR(2),	
+	IN p_Scheduler_Hours						CHAR(2),
+	IN p_Scheduler_Minutes					CHAR(2),
 	OUT idOut INT)
 BEGIN
 	/* Inserts a TelldusAction with Scheduler (in TelldusActions_Schedulers) and returns Id for the inserted row. If an identical TelldusActions_Schedulers already is exists, its Id is returned. */
 	
-	CALL GetRegisteredScheduler(p_Scheduler_Year, p_Scheduler_Month, p_Scheduler_Day, p_Scheduler_WeekDay, p_Scheduler_Hour, p_Scheduler_Minute, @Scheduler_Id);
+	CALL GetRegisteredScheduler(p_Scheduler_FullYear, p_Scheduler_Month, p_Scheduler_Date, p_Scheduler_Day, p_Scheduler_Hours, p_Scheduler_Minutes, @Scheduler_Id);
 
 	/* get TelldusActionType_Id */
 	CALL GetInsertedTelldusAction(p_TelldusAction_Active, p_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption, p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusAction_Id);
@@ -838,7 +838,7 @@ DELIMITER $$
 CREATE PROCEDURE GetInsertedMediaAction ( 
 	IN p_Active 					BIT,
 	IN p_MediaSourceName 			VARCHAR(255),
-	IN p_MediaOutputVolumeValue 	TINYINT,
+	IN p_MediaOutputValue 	TINYINT,
 	IN p_MediaOutputWebserviceUrl	VARCHAR(100),
 	IN p_MediaActionTypeOption 		VARCHAR(255),
 	OUT idOut						INT)
@@ -849,7 +849,7 @@ BEGIN
 	SET @MediaSource_Id = (SELECT Id FROM MediaSources WHERE Name = p_MediaSourceName);
 	
 	/* get MediaOutputVolume_Id */
-	SET @MediaOutputVolume_Id = (SELECT Id FROM MediaOutputVolumes WHERE VolumeValue = p_MediaOutputVolumeValue);
+	SET @MediaOutputVolume_Id = (SELECT Id FROM MediaOutputVolumes WHERE Value = p_MediaOutputValue);
 	
 	/* get MediaOutput_Id */
 	SET @MediaOutput_Id = (SELECT Id FROM MediaOutputs WHERE MediaWebserviceUrl = p_MediaOutputWebserviceUrl);
@@ -868,12 +868,12 @@ DELIMITER $$
 CREATE PROCEDURE RegisterPerformedMediaAction (
 	IN p_PerformedMediaActionUnixTime 	INT,
 	IN p_MediaSourceName 				VARCHAR(255),
-	IN p_MediaOutputVolumeValue 		TINYINT,
+	IN p_MediaOutputValue 		TINYINT,
 	IN p_MediaOutputWebserviceUrl 		VARCHAR(100),
 	IN p_MediaActionTypeOption 			VARCHAR(255),
 	OUT idOut 							INT)
 BEGIN
-	CALL GetInsertedMediaAction('1', p_MediaSourceName, p_MediaOutputVolumeValue, p_MediaOutputWebserviceUrl, p_MediaActionTypeOption, @InsertedMediaAction_Id);
+	CALL GetInsertedMediaAction('1', p_MediaSourceName, p_MediaOutputValue, p_MediaOutputWebserviceUrl, p_MediaActionTypeOption, @InsertedMediaAction_Id);
 	
 	/* register performed MediaAction */
 	INSERT INTO MediaActionsPerformed(PerformedTime, FK_MediaAction_Id) VALUES (IFNULL(p_PerformedMediaActionUnixTime, UNIX_TIMESTAMP()), @InsertedMediaAction_Id);
