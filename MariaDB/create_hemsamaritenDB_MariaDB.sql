@@ -88,7 +88,7 @@ CREATE TABLE `Schedulers` (
 	
 	`Date`			DATE,
 	`Day`			CHAR(2),
-	`Time`			TIME,
+	`Time`			TIME NOT NULL,
 		
 	PRIMARY KEY (`Id`)
 );
@@ -212,9 +212,7 @@ ALTER TABLE	`TelldusActions` ADD UNIQUE (`FK_TelldusActionType_Id`, `FK_TelldusA
 
 ALTER TABLE	`TelldusActions_Schedulers` ADD UNIQUE (`FK_TelldusAction_Id`, `FK_Scheduler_Id`);
 
-ALTER TABLE	`Schedulers` ADD UNIQUE (`Date`, `Day`, `Time`); 
-ALTER TABLE	`Schedulers` ADD UNIQUE (`Date`, `Time`); 
-ALTER TABLE	`Schedulers` ADD UNIQUE (`Day`, `Time`); 
+ALTER TABLE	`Schedulers` ADD UNIQUE (`Date`, `Day`, `Time`);
 
 ALTER TABLE	`MediaActions_Schedulers` ADD UNIQUE (`FK_MediaAction_Id`, `FK_Scheduler_Id`);
 

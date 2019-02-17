@@ -6,6 +6,43 @@ DROP procedure IF EXISTS RegisterTelldusAction_Scheduler;
 DROP procedure IF EXISTS RegisterPerformedMediaAction;
 DROP procedure IF EXISTS GetInsertedMediaAction;
 
+
+DELIMITER $$
+CREATE PROCEDURE GetRegisteredScheduler (
+	IN p_Scheduler_Date		DATE,
+	IN p_Scheduler_Day		CHAR(2),
+	IN p_Scheduler_Time		TIME,
+	OUT idOut INT)
+BEGIN
+	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. */
+	
+	INSERT INTO Schedulers(`Date`, `Day`, `Time`) VALUES (p_Scheduler_Date, p_Scheduler_Day, p_Scheduler_Time) ON DUPLICATE KEY UPDATE `Id` = LAST_INSERT_ID(`Id`);
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE RegisterPerformedTelldusAction (
+	IN p_PerformedTelldusActionUnixTime 	INT,
+	IN p_TelldusUnit_Name 					VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
+	IN p_TelldusActionValueType_Name 		VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
+	OUT idOut INT)
+BEGIN
+	CALL GetInsertedTelldusAction('1', p_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption,p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue,@InsertedTelldusAction_Id);
+	
+	/* register performed TelldusAction */
+	INSERT INTO `TelldusActionsPerformed`(`PerformedTime`, `FK_TelldusAction_Id`) VALUES (IFNULL(p_PerformedTelldusActionUnixTime, UNIX_TIMESTAMP()), @InsertedTelldusAction_Id);
+	SET @LastTelldusActionPerformed_Id = LAST_INSERT_ID();
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
+
 DELIMITER $$
 CREATE PROCEDURE GetInsertedTelldusAction ( 
 	IN p_Active 							BIT,
@@ -40,39 +77,9 @@ BEGIN
 END$$
 DELIMITER ;
 
-DELIMITER $$
-CREATE PROCEDURE RegisterPerformedTelldusAction (
-	IN p_PerformedTelldusActionUnixTime 	INT,
-	IN p_TelldusUnit_Name 					VARCHAR(255),
-	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
-	IN p_TelldusActionValueType_Name 		VARCHAR(20),
-	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
-	OUT idOut INT)
-BEGIN
-	CALL GetInsertedTelldusAction('1', p_TelldusUnit_Name,p_TelldusActionType_ActionTypeOption,p_TelldusActionValueType_Name,p_TelldusActionValue_ActionValue,@InsertedTelldusAction_Id);
-	
-	/* register performed TelldusAction */
-	INSERT INTO `TelldusActionsPerformed`(`PerformedTime`, `FK_TelldusAction_Id`) VALUES (IFNULL(p_PerformedTelldusActionUnixTime, UNIX_TIMESTAMP()), @InsertedTelldusAction_Id);
-	SET @LastTelldusActionPerformed_Id = LAST_INSERT_ID();
-	
-	SELECT LAST_INSERT_ID() INTO idOut ;
-END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE PROCEDURE GetRegisteredScheduler (
-	IN p_Scheduler_Date		DATE,
-	IN p_Scheduler_Day		CHAR(2),
-	IN p_Scheduler_Time		TIME,
-	OUT idOut INT)
-BEGIN
-	/* Inserts a Scheduler (in Schedulers) and returns Id for the inserted row. If an identical Scheduler already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
-	
-	INSERT INTO Schedulers(`Date`, `Day`, `Time`) VALUES (p_Scheduler_Date, p_Scheduler_Day, p_Scheduler_Time) ON DUPLICATE KEY UPDATE `Id` = LAST_INSERT_ID(`Id`);
-	
-	SELECT LAST_INSERT_ID() INTO idOut ;
-END$$
-DELIMITER ;
+
+
 
 DELIMITER $$
 CREATE PROCEDURE RegisterTelldusAction_Scheduler ( 
@@ -143,74 +150,7 @@ BEGIN
 	
 	/* register performed MediaAction */
 	INSERT INTO `MediaActionsPerformed`(`PerformedTime`, `FK_MediaAction_Id`) VALUES (IFNULL(p_PerformedMediaActionUnixTime, UNIX_TIMESTAMP()), @InsertedMediaAction_Id);
-	SET @LastMediaActionPerformed_Id = LAST_INSERT_ID();
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
 DELIMITER ;
-
---------------------------------------------------
-
-SET @TelldusActionPerformed_Id = 0;
-CALL RegisterPerformedTelldusAction(1536521458,1,'TurnOn','Effect_W','50','A1', @TelldusActionPerformed_Id);
-
-SELECT @TelldusActionPerformed_Id;
-
-RegisterPerformedTelldusAction (
-	IN p_PerformedTelldusActionUnixTime 	INT,
-	IN p_TelldusUnit_Name 					VARCHAR(255),
-	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
-	IN p_TelldusActionValueType_Name 		VARCHAR(20),
-	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
-CALL RegisterPerformedTelldusAction(1536521458,1,'TurnOn','Effect_W','50','A1','');
-
--------
-SET @idOut = 0;
-CALL GetRegisteredScheduler (
-	null,
-	null,
-	null,	
-	6,	
-	16,
-	6,
-	@idOut)
-SELECT @idOut;
-
-SET @idOut = 0;
-CALL RegisterTelldusAction_Scheduler ( 
-	1,
-	'A1',
-	'onOffDevice',
-	'levelValue',
-	'on',
-	null,
-	null,
-	null,	
-	6,	
-	16,
-	6,
-	@idOut);
-SELECT @idOut;
-
-
-
-
-
-/* get MediaSource_Id */
-SET @MediaSource_Id = (SELECT Id FROM MediaSources WHERE Url = 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrnorfolk_mf_p');
-
-/* get MediaOutputVolume_Id */
-SET @MediaOutputVolume_Id = (SELECT Id FROM MediaOutputVolumes WHERE Value = '15');
-
-/* get MediaOutput_Id */
-SET @MediaOutput_Id = (SELECT Id FROM MediaOutputs WHERE MediaWebserviceUrl = 'http://10.0.0.1/example.com/playservice_POST.svc');
-
-/* get MediaActionType_Id */
-SET @MediaActionType_Id = (SELECT Id FROM MediaActionTypes WHERE ActionTypeOption = 'Stop');
-
-INSERT INTO MediaActions(Active, CronExpression, FK_MediaSource_Id, FK_MediaOutputVolume_Id, FK_MediaOutput_Id, FK_MediaActionType_Id) VALUES ('1',IFNULL('EXEMPEL PÅ CRON',''),@MediaSource_Id, @MediaOutputVolume_Id, @MediaOutput_Id ,@MediaActionType_Id) ON DUPLICATE KEY UPDATE `Id` = LAST_INSERT_ID(`Id`);
-SET @MediaAction_Id = LAST_INSERT_ID();
-
-/* register performed MediaAction */
-INSERT INTO MediaActionsPerformed(PerformedTime, FK_MediaAction_Id) VALUES (UNIX_TIMESTAMP(),@MediaAction_Id);
-SET @LastTelldusActionPerformed_Id = LAST_INSERT_ID();
