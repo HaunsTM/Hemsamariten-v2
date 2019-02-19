@@ -83,14 +83,15 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE RegisterTelldusAction_Scheduler ( 
-	IN p_TelldusAction_Active				BIT,
-	IN p_TelldusUnit_Name 					VARCHAR(255),
-	IN p_TelldusActionType_ActionTypeOption VARCHAR(255),
-	IN p_TelldusActionValueType_Name 		VARCHAR(20),
-	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
-	IN p_Scheduler_Date						DATE,
-	IN p_Scheduler_Day						CHAR(2),
-	IN p_Scheduler_Time						TIME,
+	IN p_TelldusAction_Active					BIT,
+	IN p_TelldusUnit_Name 						VARCHAR(255),
+	IN p_TelldusActionType_ActionTypeOption 	VARCHAR(255),
+	IN p_TelldusActionValueType_Name 			VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue 		VARCHAR(255),
+	IN p_telldusAction_Scheduler_ReferenceId	VARCHAR(255),
+	IN p_Scheduler_Date							DATE,
+	IN p_Scheduler_Day							CHAR(2),
+	IN p_Scheduler_Time							TIME,
 	OUT idOut INT)
 BEGIN
 	/* Inserts a TelldusAction with Scheduler (in TelldusActions_Schedulers) and returns Id for the inserted row. If an identical TelldusActions_Schedulers already is exists, its Id is returned. */
@@ -99,9 +100,9 @@ BEGIN
 
 	/* get TelldusActionType_Id */
 	CALL GetInsertedTelldusAction(p_TelldusAction_Active, p_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption, p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusAction_Id);
-	
-	
-	INSERT INTO `TelldusActions_Schedulers`(`FK_TelldusAction_Id`, `FK_Scheduler_Id`) VALUES (@TelldusAction_Id, @Scheduler_Id) ON DUPLICATE KEY UPDATE `Id` = LAST_INSERT_ID(`Id`);	
+
+
+	INSERT INTO `TelldusActions_Schedulers`(`ReferenceId`, `FK_TelldusAction_Id`, `FK_Scheduler_Id`) VALUES (p_telldusAction_Scheduler_ReferenceId, @TelldusAction_Id, @Scheduler_Id) ON DUPLICATE KEY UPDATE `Id` = LAST_INSERT_ID(`Id`);
 	
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$

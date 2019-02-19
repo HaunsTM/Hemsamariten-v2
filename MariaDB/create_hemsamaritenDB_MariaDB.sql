@@ -25,7 +25,7 @@ CREATE TABLE `TelldusActionTypes` (
 CREATE TABLE `TelldusActionValueTypes` (
 	`Id`				INT NOT NULL AUTO_INCREMENT,	
 	
-	`Name`				VARCHAR(255)  NOT NULL,
+	`Name`				VARCHAR(255) NOT NULL,
 	
 	PRIMARY KEY (`Id`)
 );
@@ -77,9 +77,11 @@ CREATE TABLE `TelldusActionsPerformed` (
 CREATE TABLE `TelldusActions_Schedulers` (
 	`Id`					INT NOT NULL AUTO_INCREMENT,
 	
+	`ReferenceId`			VARCHAR(255),
+	
 	`FK_TelldusAction_Id`	INT NOT NULL,
 	`FK_Scheduler_Id`		INT NOT NULL,
-	
+
 	PRIMARY KEY (`Id`)
 );
 
@@ -89,7 +91,7 @@ CREATE TABLE `Schedulers` (
 	`Date`			DATE,
 	`Day`			CHAR(2),
 	`Time`			TIME NOT NULL,
-		
+
 	PRIMARY KEY (`Id`)
 );
 
