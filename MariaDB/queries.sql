@@ -1,10 +1,11 @@
 
-DROP procedure IF EXISTS RegisterPerformedTelldusAction;
-DROP procedure IF EXISTS GetInsertedTelldusAction;
-DROP procedure IF EXISTS GetRegisteredScheduler;
-DROP procedure IF EXISTS RegisterTelldusAction_Scheduler;
-DROP procedure IF EXISTS RegisterPerformedMediaAction;
-DROP procedure IF EXISTS GetInsertedMediaAction;
+DROP PROCEDURE IF EXISTS RegisterPerformedTelldusAction;
+DROP PROCEDURE IF EXISTS GetInsertedTelldusAction;
+DROP PROCEDURE IF EXISTS GetInsertedTelldusActionValue;
+DROP PROCEDURE IF EXISTS GetRegisteredScheduler;
+DROP PROCEDURE IF EXISTS RegisterTelldusAction_Scheduler;
+DROP PROCEDURE IF EXISTS RegisterPerformedMediaAction;
+DROP PROCEDURE IF EXISTS GetInsertedMediaAction;
 
 
 DELIMITER $$
@@ -61,13 +62,7 @@ BEGIN
 	SET @TelldusActionType_Id = (SELECT `Id` FROM `TelldusActionTypes` WHERE `ActionTypeOption` = p_TelldusActionType_ActionTypeOption);
 
 	/* get TelldusActionValue_Id */
-	SET @TelldusActionValue_Id = 
-	(SELECT
-		`TelldusActionValues`.`Id`
-		FROM `TelldusActionValues` INNER JOIN `TelldusActionValueTypes` 
-			ON `TelldusActionValues`.`FK_TelldusActionValueType_Id` = `TelldusActionValueTypes`.`Id`
-		WHERE `TelldusActionValues`.`ActionValue` = p_TelldusActionValue_ActionValue 
-			AND `TelldusActionValueTypes`.`Name` = p_TelldusActionValueType_Name);
+	CALL GetInsertedTelldusActionValue(p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue, @TelldusActionValue_Id);
 
 	
 	/* get TelldusAction_Id */
@@ -76,6 +71,26 @@ BEGIN
 	SELECT LAST_INSERT_ID() INTO idOut ;
 END$$
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE GetInsertedTelldusActionValue (
+	IN p_TelldusActionValueType_Name 		VARCHAR(20),
+	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
+	OUT idOut INT)
+BEGIN
+	/* Inserts an TelldusActionValue and returns Id for the inserted row. If an identical TelldusActionValue already is exists, its Id is returned. There are no optional parameters. Use empty strings. */
+	
+
+	/* get TelldusActionType_Id */
+	SET @TelldusActionValueType_Id = (SELECT `Id` FROM `TelldusActionValueTypes` WHERE `Name` = p_TelldusActionValueType_Name);
+	
+	/* get TelldusActionValue_Id */
+	INSERT INTO `TelldusActionValues` (`ActionValue`, `FK_TelldusActionValueType_Id`) VALUES (p_TelldusActionValue_ActionValue, @TelldusActionValueType_Id) ON DUPLICATE KEY UPDATE `Id` = LAST_INSERT_ID(`Id`);
+	
+	SELECT LAST_INSERT_ID() INTO idOut ;
+END$$
+DELIMITER ;
+
 
 
 
