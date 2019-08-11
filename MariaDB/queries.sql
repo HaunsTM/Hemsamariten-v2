@@ -33,7 +33,7 @@ CREATE PROCEDURE RegisterPerformedTelldusAction (
 	IN p_TelldusActionValue_ActionValue 	VARCHAR(255),
 	OUT idOut INT)
 BEGIN
-	CALL GetInsertedTelldusAction('1', p_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption,p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue,@InsertedTelldusAction_Id);
+	CALL GetInsertedTelldusAction( true, p_TelldusUnit_Name, p_TelldusActionType_ActionTypeOption,p_TelldusActionValueType_Name, p_TelldusActionValue_ActionValue,@InsertedTelldusAction_Id);
 	
 	/* register performed TelldusAction */
 	INSERT INTO `TelldusActionsPerformed`(`PerformedTime`, `FK_TelldusAction_Id`) VALUES (IFNULL(p_PerformedTelldusActionUnixTime, UNIX_TIMESTAMP()), @InsertedTelldusAction_Id);

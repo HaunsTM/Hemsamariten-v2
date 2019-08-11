@@ -258,6 +258,7 @@ INSERT INTO `TelldusUnitTypes` (`Name`) VALUES ('Z-Wave - HeatItZWaveThermostat'
 
 INSERT INTO `TelldusActionTypes` (`ActionTypeOption`) VALUES ('getProfile');
 INSERT INTO `TelldusActionTypes` (`ActionTypeOption`) VALUES ('listSensors');
+INSERT INTO `TelldusActionTypes` (`ActionTypeOption`) VALUES ('getSensorInfo');
 INSERT INTO `TelldusActionTypes` (`ActionTypeOption`) VALUES ('setSensorName');
 INSERT INTO `TelldusActionTypes` (`ActionTypeOption`) VALUES ('setSensorIgnore');
 INSERT INTO `TelldusActionTypes` (`ActionTypeOption`) VALUES ('listClients');
@@ -722,5 +723,8 @@ INSERT INTO `MediaActionTypes` (`ActionTypeOption`) VALUES ('Pause');
 INSERT INTO `MediaActionTypes` (`ActionTypeOption`) VALUES ('Resume');
 INSERT INTO `MediaActionTypes` (`ActionTypeOption`) VALUES ('SetVolume');
 INSERT INTO `MediaActionTypes` (`ActionTypeOption`) VALUES ('Stop');
+
+
+
 
 
